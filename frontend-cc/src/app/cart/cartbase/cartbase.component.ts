@@ -21,7 +21,7 @@ export class CartbaseComponent {
     private cartservice :CartService,
     private messageservice: MessageService,
    ) { }
-  private apiUrl = 'http://localhost:8000/app/cart/mycart/';
+  private apiUrl = 'http://10.130.150.228:8000/app/cart/mycart/';
   cartitems: any[] = [];
   openLoginBox = false;
   total_price : number = 0;

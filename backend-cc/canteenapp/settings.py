@@ -15,6 +15,13 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # or any other directory you prefer
+STATIC_URL = '/static/'  # URL for serving static files
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Directory for app-specific static files
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -25,7 +32,7 @@ SECRET_KEY = 'django-insecure-%6y5w)4k1lj7f+)+dsqh&5=^e)t%7#24*3ar$wj(^^l8c@^=)s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.103', '127.0.0.1','localhost']
+ALLOWED_HOSTS = ['192.168.1.103', '127.0.0.1','localhost',"10.130.150.228",]
 
 
 # Application definition
@@ -41,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
-    'django_apscheduler',
+    # 'django_apscheduler',
 
 ]
 
@@ -54,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add this line
 
 ]
 
@@ -123,7 +131,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -135,7 +143,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
-    
+    "http://10.130.150.228:8000",
     "http://192.168.1.103:4200"
 ]
 

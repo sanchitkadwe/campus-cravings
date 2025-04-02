@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class CartService {
 
   constructor(private httpclient : HttpClient) { }
-  private apiUrl = 'http://localhost:8000/app/cart/';
+  private apiUrl = 'http://10.130.150.228:8000/app/cart/';
  
 
   getcart():Observable<any>{

@@ -9,7 +9,7 @@ export class MenuService {
 
   constructor(private httpclient : HttpClient) {}
 
-  private menuUrl = 'http://localhost:8000/app/menu-items/'; 
+  private menuUrl = 'http://10.130.150.228:8000/app/menu-items/'; 
 
   getMenu(category:string|null):Observable<any>{
     let params = new HttpParams()
