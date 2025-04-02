@@ -1,0 +1,149 @@
+<div class="card flex justify-center">
+  <p-toast position="bottom-right" key="br" [baseZIndex]="5000">
+  </p-toast>
+</div>
+
+
+
+<div class="card flex justify-center">
+  <!-- PrimeNG Dialog with improved mobile padding -->
+  <p-dialog
+    header=""
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '25rem', maxWidth: 'calc(100vw - 2rem)' }"
+    [contentStyle]="{ 'padding': '0 1.5rem', 'border-radius': '12px' }"
+    [breakpoints]="{ '640px': '90vw' }"
+    (onHide)="closeDialog()"
+    [dismissableMask]="true"
+  >
+    <!-- Login Form -->
+    <div *ngIf="!togglebutton" class="transition-all duration-300 ease-in-out px-2 sm:px-0">
+      <div class="text-center mb-4">
+        <img
+          alt="Logo"
+          class="img-fluid rounded-circle shadow-sm d-block mx-auto"
+          style="width: 120px; height: 120px; object-fit: cover;"
+          src="https://www.iconpacks.net/icons/4/free-fast-food-delivery-icon-12982-thumb.png"
+        />
+      </div>
+      <h2 class="text-center mb-3 fw-bold" style="color: #2c3e50;">Welcome back</h2>
+      <p class="text-center text-muted mb-4">
+        Glad to see you again <span class="wave">👋</span>
+      </p>
+
+      <div class="mb-3">
+        <label class="form-label fw-medium" style="color: #34495e;">Mobile Number</label>
+        <input
+          [(ngModel)]="login_data.phone_number"
+          name="phone_number"
+          class="form-control w-100"
+          placeholder="Enter Mobile Number"
+          type="email"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-medium" style="color: #34495e;">Password</label>
+        <input
+          [(ngModel)]="login_data.password"
+          name="password"
+          class="form-control w-100"
+          placeholder="Enter Password"
+          type="password"
+          required
+        />
+      </div>
+      <button
+        class="btn btn-primary w-100 py-2 rounded-pill"
+        (click)="login()"
+      >
+        Login
+      </button>
+      <p class="text-center text-muted mt-4 mb-3">
+        Don't have an account?
+        <a
+          (click)="toggleView()"
+          class="text-decoration-none text-primary cursor-pointer"
+        >
+          Sign up for Free
+        </a>
+      </p>
+    </div>
+
+    <!-- Signup Form -->
+    <div *ngIf="togglebutton" class="transition-all duration-300 ease-in-out px-2 sm:px-0">
+      <div class="text-center mb-4">
+        <img
+          alt="Logo"
+          class="img-fluid rounded-circle shadow-sm d-block mx-auto"
+          style="width: 100px; height: 100px; object-fit: cover;"
+          src="https://www.iconpacks.net/icons/4/free-fast-food-delivery-icon-12982-thumb.png"
+        />
+      </div>
+      <h2 class="text-center mb-3 fw-bold" style="color: #2c3e50;">Sign Up</h2>
+      <p class="text-center text-muted mb-4">
+        Enter your details below to create your account and get started.
+      </p>
+
+      <form>
+        <div class="mb-3">
+          <label class="form-label fw-medium" style="color: #34495e;">Name</label>
+          <input
+            [(ngModel)]="sign_data.name"
+            name="name"
+            class="form-control w-100"
+            placeholder="Enter Name"
+            type="text"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-medium" style="color: #34495e;">Hostel</label>
+          <input
+            [(ngModel)]="sign_data.hostel"
+            name="hostel"
+            class="form-control w-100"
+            placeholder="Enter Hostel"
+            type="text"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-medium" style="color: #34495e;">Phone Number</label>
+          <input
+            [(ngModel)]="sign_data.phone_number"
+            name="phone_number"
+            class="form-control w-100"
+            placeholder="Enter Phone Number"
+            type="text"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-medium" style="color: #34495e;">Password</label>
+          <input
+            [(ngModel)]="sign_data.password"
+            name="password"
+            class="form-control w-100"
+            placeholder="Enter Password"
+            type="password"
+          />
+        </div>
+
+        <div class="d-flex justify-content-between mb-4">
+          <button
+            class="btn btn-outline-secondary px-4 py-2 rounded-pill"
+            (click)="toggleView()"
+          >
+            Back to Login
+          </button>
+          <button
+            class="btn btn-primary px-4 py-2 rounded-pill"
+            type="submit"
+            (click)="signup()"
+          >
+            Sign Up
+          </button>
+        </div>
+      </form>
+    </div>
+  </p-dialog>
+</div>

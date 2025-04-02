@@ -1,0 +1,153 @@
+<div class="content-area">
+  <div class="content-container">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1 text-gradient">
+          <i class="bi bi-tags me-2"></i>Food Items
+        </h2>
+      </div>
+      <button class="btn btn-primary rounded-pill px-4 py-2 shadow-sm" data-bs-toggle="modal"
+        data-bs-target="#categoryModal">
+        <i class="bi bi-plus-lg me-2"></i>New Item
+      </button>
+    </div>
+
+    <!-- Items Table -->
+    <div class="card border-0 shadow-sm rounded-3">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light bg-opacity-10">
+              <tr>
+                <th class="ps-4 fw-semibold text-muted" width="60px">#</th>
+                <th class="fw-semibold text-muted" width="80px">Icon</th>
+                <th class="fw-semibold text-muted">Item Name</th>
+                <th class="fw-semibold text-muted">Category</th>
+                <th class="fw-semibold text-muted">Price</th>
+                <th class="fw-semibold text-muted">Availability</th>
+                <th class="text-end pe-4 fw-semibold text-muted" width="140px">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of menuItems" class="border-bottom border-light">
+                <td class="ps-3 fw-medium">{{item.id}}</td>
+                <td>
+                  <div class="icon-wrapper bg-primary bg-opacity-10 rounded-3 p-3">
+                    <i class="bi bi-egg-fried fs-4 text-primary"></i>
+                  </div>
+                </td>
+                <td>
+                  <h6 class="mb-0 fw-semibold">{{item.item_name}}</h6>
+                </td>
+                <td>
+                  <span class="badge">{{item.category.category_name}}</span>
+                </td>
+                <td>
+                  <span class="fw-medium">&#8377;{{item.price}}</span>
+                </td>
+                <td>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" [id]="'availability'+item.id"
+                      [checked]="item.available">
+                    <label class="form-check-label" [for]="'availability'+item.id">
+                      {{item.available ? 'Available' : 'Not Available'}}
+                    </label>
+                  </div>
+                </td>
+                <td class="pe-4">
+                  <div class="d-flex justify-content-end gap-2">
+                    <button class="action-btn btn-edit">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="action-btn btn-delete">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add/Edit Item Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold">
+          <i class="bi bi-plus-lg text-primary me-2"></i>Add New Item
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <form>
+
+          <!-- Item Details Form -->
+          <div class="mb-3">
+            <label for="itemName" class="form-label mt-5">Item Name</label>
+            <input type="text" class="form-control border-light" id="itemName" placeholder="e.g. Paneer Tikka Masala">
+          </div>
+
+          <div class="mb-3">
+            <label for="itemPrice" class="form-label">Price</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control border-light" id="itemPrice" placeholder="0.00" step="0.01">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="itemCategory" class="form-label">Category</label>
+            <select class="form-select border-light" id="itemCategory">
+              <option selected>Select a category</option>
+              <option value="breakfast">Breakfast</option>
+              <option value="beverages">Beverages</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Availability</label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="itemAvailability" checked>
+              <label class="form-check-label" for="itemAvailability">Available</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary px-4 rounded-pill" data-bs-dismiss="modal">Save
+          Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-body text-center p-5">
+        <div class="icon-wrapper bg-danger bg-opacity-10 rounded-circle p-4 d-inline-flex mb-4">
+          <i class="bi bi-exclamation-triangle-fill text-danger fs-2"></i>
+        </div>
+        <h4 class="fw-bold mb-3">Delete Item?</h4>
+        <p class="text-muted mb-4">Are you sure you want to delete <span class="fw-bold text-dark">"Scrambled
+            Eggs"</span>?
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger px-4 rounded-pill" data-bs-dismiss="modal">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

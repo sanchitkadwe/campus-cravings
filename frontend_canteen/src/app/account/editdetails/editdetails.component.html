@@ -1,0 +1,72 @@
+<div class="container py-5 text-center">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="profile-edit-card p-4 shadow-lg rounded-3 bg-white" style="max-width: 450px; margin: auto;">
+        <!-- Heading -->
+        <h3 class="text-center mb-4 fw-bold" style="color: #2c3e50;">Edit Profile</h3>
+
+        <!-- Form -->
+        <form (submit)="updateProfile()">
+          <!-- Profile Image Upload -->
+          <div class="text-center mb-4">
+            <img
+              src="https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg"
+              alt="Profile Image"
+              class="img-fluid rounded-circle shadow-sm d-block mx-auto"
+              style="width: 120px; height: 120px; object-fit: cover;"
+            />
+            <input
+              type="file"
+              class="form-control mt-3 mx-auto w-75"
+            />
+          </div>
+
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label fw-medium" style="color: #34495e;">Name</label>
+            <input
+              type="text"
+              class="form-control w-75 mx-auto"
+              name="name"
+              required
+              placeholder="e.g Chintu"
+            />
+          </div>
+
+          <!-- Hostel -->
+          <div class="mb-3">
+            <label class="form-label fw-medium" style="color: #34495e;">Hostel</label>
+            <input
+              type="text"
+              class="form-control w-75 mx-auto"
+              name="hostel"
+              required
+              placeholder="e.g 17"
+            />
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex justify-content-between mt-4">
+            <button
+              type="button"
+              class="btn btn-outline-secondary px-4 py-2 rounded-pill"
+              (click)="cancelEdit()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary px-4 py-2 rounded-pill"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

@@ -1,0 +1,67 @@
+.dropdown-menu {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.elegant-modal .modal-content {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.elegant-modal .modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 1.2rem 1.5rem;
+}
+
+.elegant-modal .modal-title {
+  font-weight: 600;
+  color: #333;
+}
+
+
+.elegant-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.elegant-modal .form-check-input:checked {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.elegant-modal .form-check-label {
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+}
+
+.elegant-modal .btn-close {
+  font-size: 0.8rem;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+}
+
+.btn-danger:hover {
+  background-color: #bb2d3b;
+  border-color: #b02a37;
+}
+
+.btn-outline-secondary {
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+}
+
+/* Center modal vertically */
+.modal-dialog-centered {
+  min-height: calc(100% - 3.5rem);
+}
+
+@media (max-width: 576px) {
+  .elegant-modal .modal-content {
+    margin: 1rem;
+  }
+}

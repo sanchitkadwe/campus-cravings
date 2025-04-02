@@ -1,0 +1,134 @@
+<div class="card flex justify-center">
+  <p-toast position="bottom-right" key="br" [baseZIndex]="5000">
+    <!-- <ng-template let-message pTemplate="message">
+      <div  class="container py-4" style="z-index: 1000; background-color: white; color: black">
+        <div class="row justify-content-center">
+          <div class="col-xxl-7 col-xl-8 col-lg-9 col-md-10">
+            <aside class="cart-summary shadow-sm">
+              <h4 class="h6 fw-bold mb-3" style="color: black">Your Order (2 items)</h4>
+              <ul class="list-unstyled small mb-3" style="color: black">
+                <li class="d-flex justify-content-between mb-2">
+                  <span>Classic Cheeseburger x2</span>
+                  <span>₹25.98</span>
+                </li>
+                <li class="d-flex justify-content-between mb-2">
+                  <span>Margherita Pizza</span>
+                  <span>₹14.99</span>
+                </li>
+              </ul>
+              <div class="d-flex justify-content-between fw-bold mb-3" style="color: black">
+                <span>Total:</span>
+                <span>₹40.97</span>
+              </div>
+              <button (click)='goToCheckout()' class="btn btn-danger w-100">Checkout Now</button>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </ng-template> -->
+  </p-toast>
+</div>
+
+<div class="container-fluid p-0">
+  <!-- Category Navigation -->
+  <nav class="category-nav py-2 w-100">
+    <div class="container">
+      <div class="category-scroll-containe">
+        <div class="d-flex flex-nowrap gap-2">
+          <!-- All button with active class when selectedCategory is null or 'all' -->
+          <button
+            class="category-btn"
+            [class.active]="!selectedCategory || selectedCategory === 'all'"
+            (click)="selectCategory('all') ; getmenu()"
+          >
+            All
+          </button>
+
+          <!-- Category buttons -->
+          <button
+            *ngFor="let category of categories"
+            class="category-btn"
+            [class.active]="selectedCategory === category.category_name"
+            (click)="selectCategory(category.category_name); getmenu()"
+          >
+            {{ category.category_name }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Menu Items Grid -->
+  <main class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-xxl-7 col-xl-8 col-lg-9 col-md-10">
+        <div class="row g-4">
+          <!-- Single Card Template -->
+          <div
+            *ngFor="let item of menuItems"
+            class="col-12 col-md-6 col-lg-4 d-flex"
+          >
+            <article class="menu-card w-100 d-flex flex-column">
+              <div
+                class="menu-image-container"
+                [class.position-relative]="!item.available"
+              >
+                <div class="out-of-stock" *ngIf="!item.available">
+                  <span>Out of Stock</span>
+                </div>
+                <img
+                  src="https://www.vegrecipesofindia.com/wp-content/uploads/2021/02/schezwan-fried-rice.jpg"
+                  class="menu-image w-100"
+                />
+              </div>
+              <div class="p-3 flex-grow-1 d-flex flex-column">
+                <div class="mb-2">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h3 class="h5 fw-bold mb-0">{{ item.item_name }}</h3>
+                    <span class="text-success fw-bold">{{
+                      item.price | currency : "INR"
+                    }}</span>
+                  </div>
+                </div>
+                <div class="mt-auto">
+                  <div *ngIf="item.available; else unavailableBlock">
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <select
+                        [(ngModel)]="itemQuantities[item.id]"
+                        class="quantity-select text-center"
+                      >
+                        <option *ngFor="let number of numbers" [value]="number">
+                          {{ number }}
+                        </option>
+                      </select>
+                      <button
+                        (click)="
+                          addtoCart(item.id, itemQuantities[item.id],item.item_name);
+                        "
+                        class="add-to-cart"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                  <ng-template #unavailableBlock>
+                    <button
+                      class="btn btn-outline-secondary rounded-pill w-100"
+                      disabled
+                    >
+                      Currently Unavailable
+                    </button>
+                  </ng-template>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Cart Summary -->
+</div>

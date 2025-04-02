@@ -1,0 +1,51 @@
+<div class="container-fluid d-flex vh-100 p-0">
+  <div class="d-flex w-100">
+    <!-- Content -->
+    <div class="flex-grow-1 p-4">
+      <app-orderview></app-orderview>
+
+      <!-- Status Update Controls -->
+      <div class="container py-2" style="max-width: 1152px;">
+        <div class="card">
+          <div class="card-header py-3 border-bottom">
+            <h2 class="h6 fw-semibold mb-0">Update Order Status</h2>
+          </div>
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-md-8 mb-3 mb-md-0">
+                <select class="form-select">
+                  <option value="Pending" selected>Pending</option>
+                  <option value="Accepted">Accepted</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="showStatusUpdateToast()">
+                  Update Status
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Notification -->
+      <div id="statusToast" class="position-fixed top-0 end-0 p-3" style="z-index: 1200; display: none;">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Status Updated</strong>
+            <button type="button" class="btn-close btn-close-white" onclick="hideToast()"></button>
+          </div>
+          <div class="toast-body">
+            Order status changed successfully
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+</div>

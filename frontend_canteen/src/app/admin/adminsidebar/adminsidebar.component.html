@@ -1,0 +1,84 @@
+<div class="admin-container">
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle-btn" (click)="toggleNavbar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar" [class.mobile-open]="isNavbarOpen">
+        <!-- Header Section -->
+        <div class="sidebar-header">
+            <div class="branding">
+                <i class="fas fa-store"></i>
+                <h1>Admin Panel</h1>
+            </div>
+            <div class="store-status">
+                <span>STORE STATUS</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" 
+                    [(ngModel)]="isStoreOpen"
+                    (change)="toggleStore()"
+                    />
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div class="nav-menu">
+            <a [routerLink]="'/admin/'" class="active">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <div class="menu-section">
+                <div class="section-header">
+                    <i class="fas fa-list-alt"></i>
+                    <span>Menu Management</span>
+                </div>
+                <div class="section-items">
+                    <a [routerLink]="'/admin/managecategory/'">
+                        <i class="fas fa-tag"></i>
+                        <span>Categories</span>
+                    </a>
+                    <a [routerLink]="'/admin/managemenu/'">
+                        <i class="fas fa-pizza-slice"></i>
+                        <span>Menu Items</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="section-header">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span>Orders</span>
+                </div>
+                <div class="section-items">
+                    <a [routerLink]="'/admin/allorders/'">
+                        <i class="fas fa-list"></i>
+                        <span>Active Orders</span>
+                    </a>
+                    <a [routerLink]="'/admin/manageorder/'">
+                        <i class="fas fa-history"></i>
+                        <span>Order History</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="section-header">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Payments</span>
+                </div>
+                <div class="section-items">
+                    <a routerLink="'/admin/payments/'">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Transactions</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="admin-content">
+    </div>
+</div>

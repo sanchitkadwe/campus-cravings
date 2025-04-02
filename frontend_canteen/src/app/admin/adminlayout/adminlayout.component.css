@@ -1,0 +1,14 @@
+.admin-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    min-height: 100vh;
+  }
+  
+  app-adminsidebar {
+    grid-column: 1;
+  }
+  
+  .admin-content {
+    grid-column: 2;
+    overflow-y: auto;
+  }

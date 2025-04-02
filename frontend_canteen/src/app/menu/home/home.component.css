@@ -1,0 +1,223 @@
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    ::ng-deep .p-tabview .p-tabview-nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    ::ng-deep .p-tabview .p-tabview-nav li {
+        white-space: nowrap;
+    }
+
+    .category-card {
+        position: static !important;
+        margin-bottom: 20px;
+    }
+}
+
+:root {
+    --primary-color: #ff4757;
+    --secondary-color: #2ed573;
+    --text-dark: #2f3542;
+    --text-light: #ffffff;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f1f2f6;
+    padding-bottom: 120px;
+}
+
+.menu-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url("https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
+    background-size: cover;
+    color: var(--text-light);
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+}
+
+.category-nav {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    overflow-x: scroll;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.category-nav::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Mobile-first: Left-aligned by default */
+.category-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0.5rem;
+    /* For scrollbar spacing */
+}
+
+/* Hide scrollbar in WebKit browsers */
+.category-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.category-btn {
+    border: none;
+    background: none;
+    padding: 1rem 1.5rem;
+    color: var(--text-dark);
+    white-space: nowrap;
+    position: relative; /* Needed for smooth underline effect */
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    
+    /* Create pseudo-element for smooth underline */
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: #e8413a;
+        transition: width 0.1s ease;
+    }
+
+    &.active {
+        color: var(--primary-color);
+        
+        &::after {
+            width: 100%;
+        }
+    }
+
+    &:hover {
+        color: var(--primary-color);
+        
+        &::after {
+            width: 100%;
+        }
+    }
+}
+
+.menu-card {
+    background: white;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.menu-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.menu-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 15px 15px 0 0;
+}
+
+
+.add-to-cart {
+    background: #e8413a;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+}
+
+.add-to-cart:hover {
+    background: #a9302c;
+}
+
+.quantity-select {
+    width: 80px;
+    padding: 0.5rem;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+}
+
+.cart-summary {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 350px;
+    width: 90%;
+    z-index: 1000;
+    opacity: 1 !important;
+}
+
+.out-of-stock {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    font-weight: bold;
+
+}
+
+
+
+@media (max-width: 768px) {
+    .cart-summary {
+        bottom: 0;
+        right: 0;
+        border-radius: 15px 15px 0 0;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-image {
+        height: 180px;
+    }
+
+    .category-scroll-container {
+        justify-content: center;
+    }
+}
+
+.category-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.category-btn {
+    border: none;
+    background: none;
+    padding: 1rem 1.5rem;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    /* Prevents buttons from shrinking */
+}

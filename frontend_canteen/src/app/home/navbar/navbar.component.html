@@ -1,0 +1,104 @@
+<div class="card flex justify-center">
+  <p-toast position="bottom-right" key="br" [baseZIndex]="5000">
+  </p-toast>
+</div>
+
+
+<div class="bg-white shadow-md py-4 px-6 flex items-center justify-between transition-all duration-300">
+  <!-- Logo and Image with Home Link -->
+  <div class="flex items-center space-x-4 cursor-pointer" (click)="navigateToHome()">
+    <img 
+      src="https://i.pinimg.com/736x/64/40/c3/6440c345ba03086afa7ef024673574df.jpg" 
+      alt="Campus Cravings Logo" 
+      class="h-12 w-12 transform hover:rotate-12 transition-transform duration-300"
+    />
+    <div class="text-3xl font-extrabold text-green-600 md:block hidden">Campus Cravings</div>
+    <div class="text-2xl font-extrabold text-green-600 md:hidden">CC</div>
+  </div>
+
+  <!-- Mobile Header Section -->
+  <div class="md:hidden flex items-center space-x-4">
+    <!-- Mobile Icons -->
+    <div class="flex items-center space-x-4">
+      <a  *ngIf="!isLoggedIn" (click)="showDialog()" class="text-gray-700 hover:text-green-500 transition duration-300">
+        <i class="fas fa-user text-xl"></i>
+      </a>
+      <a  *ngIf="isLoggedIn" (click)="showDialog()" class="text-gray-700 hover:text-green-500 transition duration-300">
+        <i class="fas fa-sign-out-alt text-xl"></i>
+      </a>
+      <a [routerLink]="'cart'" class="relative text-gray-700 hover:text-green-500 transition duration-300">
+        <i class="fas fa-shopping-cart text-xl"></i>
+        <span *ngIf="cartItems > 0" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          {{ cartItems }}
+        </span>
+      </a>
+    </div>
+    
+    <!-- Animated Hamburger Button -->
+    <button 
+      (click)="toggleMenu()" 
+      class="text-gray-700 hover:text-green-500 focus:outline-none transition-all duration-300"
+      [attr.aria-expanded]="isMenuOpen"
+    >
+      <div class="w-6 flex flex-col items-end space-y-1.5">
+        <span 
+          class="block h-0.5 bg-current transition-all duration-300 transform"
+          [class]="isMenuOpen ? 'w-6 rotate-45 translate-y-2' : 'w-6'"
+        ></span>
+        <span 
+          class="block h-0.5 bg-current transition-all duration-300"
+          [class]="isMenuOpen ? 'opacity-0' : 'w-5'"
+        ></span>
+        <span 
+          class="block h-0.5 bg-current transition-all duration-300 transform"
+          [class]="isMenuOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-4'"
+        ></span>
+      </div>
+    </button>
+  </div>
+
+  <!-- Desktop Navigation -->
+  <nav class="hidden md:flex space-x-8 text-lg">
+    <a class="text-gray-700 hover:text-green-500 font-medium transition duration-300" [routerLink]="'./'">Home</a>
+    <a class="text-gray-700 hover:text-green-500 font-medium transition duration-300" [routerLink]="'./categories'">Categories</a>
+    <button (click)="navigateOrder()" class="text-gray-700 hover:text-green-500 font-medium transition duration-300" >Orders</button>
+    <a class="text-gray-700 hover:text-green-500 font-medium transition duration-300" [routerLink]="'./menu'">Menu</a>
+    <a class="text-gray-700 hover:text-green-500 font-medium transition duration-300" [routerLink]="'./account'">Account</a>
+  </nav>
+
+  <!-- Desktop Icons -->
+  <div class="hidden md:flex items-center space-x-6">
+    <a *ngIf="!isLoggedIn" (click)="showDialog()" class="text-gray-700 hover:text-green-500 transition duration-300">
+      <i class="fas fa-user text-2xl"></i>
+    </a>
+    <a *ngIf="isLoggedIn" (click)="logout()" class="text-gray-700 hover:text-green-500 transition duration-300">
+      <i class="fas fa-sign-out-alt text-2xl"></i>
+    </a>
+    <a [routerLink]="'cart'" class="relative text-gray-700 hover:text-green-500 transition duration-300">
+      <i class="fas fa-shopping-cart text-2xl"></i>
+      <span *ngIf="cartItems > 0" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
+        {{ cartItems }}
+      </span>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Menu with Enhanced Animation -->
+<div 
+  class="md:hidden bg-white shadow-md overflow-hidden transition-all duration-500 ease-in-out"
+  [style.maxHeight.px]="isMenuOpen ? 300 : 0"
+  [style.opacity]="isMenuOpen ? 1 : 0"
+  [style.transform]="isMenuOpen ? 'translateY(0)' : 'translateY(-10px)'"
+  [style.visibility]="isMenuOpen ? 'visible' : 'hidden'"
+>
+  <nav class="flex flex-col space-y-4 text-lg py-4 px-6">
+    <a (click)="closeMenuAndNavigate('./')" class="text-gray-700 hover:text-green-500 font-medium transition duration-300 transform hover:translate-x-1">Home</a>
+    <a (click)="closeMenuAndNavigate('./categories')" class="text-gray-700 hover:text-green-500 font-medium transition duration-300 transform hover:translate-x-1">Categories</a>
+    <a (click)="navigateOrder()" class="text-gray-700 hover:text-green-500 font-medium transition duration-300 transform hover:translate-x-1">My Orders</a>
+    <a (click)="closeMenuAndNavigate('menu')" class="text-gray-700 hover:text-green-500 font-medium transition duration-300 transform hover:translate-x-1">Menu</a>
+    <a (click)="closeMenuAndNavigate('account')" class="text-gray-700 hover:text-green-500 font-medium transition duration-300 transform hover:translate-x-1">Account</a>
+  </nav>
+</div>
+
+<!-- Login Component -->
+<app-login [visible]="openLoginBox" (close)="openLoginBox = false;"></app-login>

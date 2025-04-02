@@ -1,0 +1,140 @@
+/* Profile Card */
+.profile-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin: 1rem 0;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-image-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-name {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #343a40;
+}
+
+.profile-details {
+  margin-bottom: 2rem;
+  
+  p {
+    margin-bottom: 0.75rem;
+    color: #6c757d;
+    
+    i {
+      width: 20px;
+      text-align: center;
+    }
+  }
+}
+
+.logout-btn {
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+}
+
+/* Not Logged In Section */
+.not-logged-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  padding: 2rem;
+}
+
+.not-logged-content {
+  text-align: center;
+  max-width: 500px;
+}
+
+.not-logged-message {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+  }
+}
+
+/* Dialog Styles */
+.dialog-content {
+  padding: 1rem 0;
+  
+  p {
+    margin-bottom: 1.5rem;
+    color: #495057;
+    font-size: 1rem;
+  }
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.dialog-btn {
+  min-width: 100px;
+  padding: 0.5rem 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 1.5rem;
+  }
+
+  .profile-image {
+    width: 120px;
+    height: 120px;
+  }  
+  
+  .dialog-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+
+
+
+
+
