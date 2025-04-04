@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class OrderService {
 
-  private allordersurl = "http://10.130.150.228:8000/app/orders/";
+  private allordersurl = "http://localhost:8000/app/orders/";
   constructor(private httpclient: HttpClient) {}
 
   myorders():Observable<any> {

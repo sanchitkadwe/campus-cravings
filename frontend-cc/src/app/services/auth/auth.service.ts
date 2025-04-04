@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiurl : string = "http://10.130.150.228:8000/app/users/";
-  private storeurl : string = "http://10.130.150.228:8000/app/store/";
+  private apiurl : string = "http://localhost:8000/app/users/";
+  private storeurl : string = "http://localhost:8000/app/store/";
 
   constructor(private httpclient : HttpClient) {
     if(localStorage.getItem('isLoggedIn') === '1') {

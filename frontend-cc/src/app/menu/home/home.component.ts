@@ -10,7 +10,7 @@ import { CartService } from '../../services/cart/cart.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-MessageService
+import { SkeletonModule } from 'primeng/skeleton';
 @Component({
   selector: 'app-home',
   imports: [
@@ -19,7 +19,9 @@ MessageService
     DataViewModule,
     TabsModule,
     ToastModule,
-    FormsModule
+    FormsModule,
+    SkeletonModule
+
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',

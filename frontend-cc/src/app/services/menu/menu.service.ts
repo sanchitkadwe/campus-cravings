@@ -9,7 +9,7 @@ export class MenuService {
 
   constructor(private httpclient : HttpClient) {}
 
-  private menuUrl = 'http://10.130.150.228:8000/app/menu-items/'; 
+  private menuUrl = 'http://localhost:8000/app/menu-items/'; 
 
   getMenu(category:string|null):Observable<any>{
     let params = new HttpParams()
@@ -21,16 +21,16 @@ export class MenuService {
   }
 
   updatemenuItem(info:any){
-    return this.httpclient.put(this.menuUrl,info,{withCredentials:true})
+    return this.httpclient.put(this.menuUrl+'patch/',info,{withCredentials:true})
   
   }
 
   createmenuItem(info:any){
-    return this.httpclient.post(this.menuUrl,info,{withCredentials:true})
+    return this.httpclient.post(this.menuUrl+'create/',info,{withCredentials:true})
   }
 
   deletemenuItem(id:number){
-    return this.httpclient.delete(this.menuUrl,{withCredentials:true})
+    return this.httpclient.delete(this.menuUrl+{id}+'/',{withCredentials:true})
   }
 
 

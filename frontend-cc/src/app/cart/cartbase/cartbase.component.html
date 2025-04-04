@@ -3,89 +3,52 @@
   </p-toast>
 </div>
 
-
-
 <div class="h-100">
   <div class="container h-100 py-4">
     <div class="row d-flex justify-content-center h-100">
       <!-- Cart Items Column (Left) -->
       <div class="col-12 col-md-8 col-lg-7">
-        <div *ngIf="cartitems.length > 0; else noOrders">
-          <!-- Shopping Cart Heading -->
+        <!-- Loading State -->
+        <div *ngIf="loading; else contentBlock">
+          <!-- Shopping Cart Heading Skeleton -->
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold mb-0" style="font-size: 1.5rem; color: black"> 
-              <i class="fas fa-shopping-basket me-2"></i>Your cravings
-            </h3>
-            <span class="badge bg-success rounded-pill">{{ cartitems.length }} items</span>
+            <p-skeleton width="200px" height="30px" styleClass="mb-2"></p-skeleton>
+            <p-skeleton width="80px" height="25px" borderRadius="16px"></p-skeleton>
           </div>
 
-          <!-- Product Cards (Using your latest design) -->
-          <div *ngFor="let item of cartitems" class="card rounded-3 mb-3 shadow-sm hover-shadow transition-all">
+          <!-- Product Cards Skeleton (3 items) -->
+          <div *ngFor="let item of [1,2,3]" class="card rounded-3 mb-3">
             <div class="card-body p-3">
               <div class="row d-flex align-items-center">
-                <!-- Product Image -->
+                <!-- Product Image Skeleton -->
                 <div class="col-4 col-md-2">
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/043/010/607/non_2x/serving-dish-filled-shadow-icon-vector.jpg"
-                    class="img-fluid rounded-2"
-                    alt="Product Image"
-                    style="max-height: 60px"
-                  />
+                  <p-skeleton width="60px" height="60px" borderRadius="8px"></p-skeleton>
                 </div>
 
-                <!-- Product Details -->
+                <!-- Product Details Skeleton -->
                 <div class="col-8 col-md-3 pe-0">
-                  <p class="mb-1 fw-medium text-truncate">
-                    {{ item.menu_item.item_name }}
-                  </p>
-                  <p class="small text-muted mb-0">
-                    ₹{{ item.menu_item.price }}
-                  </p>
+                  <p-skeleton width="100%" height="16px" styleClass="mb-2"></p-skeleton>
+                  <p-skeleton width="60%" height="14px"></p-skeleton>
                 </div>
 
-                <!-- Action Items (Price + Quantity + Delete) -->
+                <!-- Action Items Skeleton -->
                 <div class="col-12 col-md-7 mt-2 mt-md-0">
                   <div class="row align-items-center justify-content-between">
-                    
-                    <!-- Total Price (Leftmost) -->
-                    <div class="col-4 col-md-3 text-start ps-0">  <!-- Changed to text-start + ps-0 -->
-                      <p class="mb-0 ms-4 fw-medium">
-                        ₹{{ item.total_price }}
-                      </p>
+                    <div class="col-4 col-md-3 text-start ps-0">
+                      <p-skeleton width="60px" height="18px" styleClass="ms-4"></p-skeleton>
                     </div>
                 
-                    <!-- Quantity Controls (Centered) -->
                     <div class="col-4 col-md-5 text-center">
                       <div class="d-flex align-items-center justify-content-center">
-                        <button 
-                          (click)="updateQuantity(item.menu_item.id,'decrement')" 
-                          class="btn btn-link text-danger p-0 me-1" 
-                          style="min-width: 24px"
-                        >
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        
-                        <div class="text-center px-2" style="width: 40px; font-weight: 500;">
-                          {{ item.quantity }}
-                        </div>
-                        
-                        <button 
-                          (click)="updateQuantity(item.menu_item.id,'increment')" 
-                          class="btn btn-link text-danger p-0 ms-1" 
-                          style="min-width: 24px"
-                        >
-                          <i class="fas fa-plus"></i>
-                        </button>
+                        <p-skeleton width="24px" height="24px" borderRadius="50%"></p-skeleton>
+                        <p-skeleton width="40px" height="24px" styleClass="mx-2"></p-skeleton>
+                        <p-skeleton width="24px" height="24px" borderRadius="50%"></p-skeleton>
                       </div>
                     </div>
                 
-                    <!-- Delete Button (Rightmost) -->
-                    <div class="col-4 col-md-2 text-end pe-0">  <!-- Added pe-0 for edge alignment -->
-                      <button (click)="deleteitem(item.menu_item.id)" class="text-danger" style="cursor: pointer">
-                        <i class="bi bi-trash3-fill"></i>                 
-                      </button>
+                    <div class="col-4 col-md-2 text-end pe-0">
+                      <p-skeleton width="20px" height="20px" borderRadius="4px"></p-skeleton>
                     </div>
-                
                   </div>
                 </div>
               </div>
@@ -93,40 +56,160 @@
           </div>
         </div>
 
-        <!-- No Orders Section --><!-- No Orders Found Section -->
-        <ng-template #noOrders>
-          <div class="text-center py-4">
-            <div class="d-flex justify-content-center mb-3">
-              <img
-                src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-download-in-svg-png-gif-file-formats--shopping-ecommerce-simple-error-state-pack-user-interface-illustrations-6024626.png"
-                alt="Empty Cart" class="img-fluid" style="max-width: 200px" />
+        <!-- Content Block -->
+        <ng-template #contentBlock>
+          <div *ngIf="cartitems.length > 0; else noOrders">
+            <!-- Shopping Cart Heading -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="fw-bold mb-0" style="font-size: 1.5rem; color: black"> 
+                <i class="fas fa-shopping-basket me-2"></i>Your cravings
+              </h3>
+              <span class="badge bg-success rounded-pill">{{ cartitems.length }} items</span>
             </div>
 
-            <div *ngIf="isLoggedIn">
-              <h5 class="fw-medium mb-2">Your cart feels lonely</h5>
-              <p class="text-muted small mb-3">
-                Add some delicious items to get started!
-              </p>
-              <button class="btn btn-danger px-4 py-1 rounded-pill" [routerLink]="'menu'">
-                <i class="fas fa-utensils me-1"></i> Explore Menu
-              </button>
-            </div>
+            <!-- Product Cards -->
+            <div *ngFor="let item of cartitems" class="card rounded-3 mb-3 shadow-sm hover-shadow transition-all">
+              <div class="card-body p-3">
+                <div class="row d-flex align-items-center">
+                  <!-- Product Image -->
+                  <div class="col-4 col-md-2">
+                    <img
+                      src="https://static.vecteezy.com/system/resources/previews/043/010/607/non_2x/serving-dish-filled-shadow-icon-vector.jpg"
+                      class="img-fluid rounded-2"
+                      alt="Product Image"
+                      style="max-height: 60px"
+                    />
+                  </div>
 
-            <div *ngIf="!isLoggedIn">
-              <h5 class="fw-medium mb-2">Please sign in first</h5>
-              <p class="text-muted small mb-3">
-                Login to view and manage your cart
-              </p>
-              <button class="btn btn-danger px-4 py-1 rounded-pill" (click)="goToLogin()">
-                <i class="fas fa-sign-in-alt me-1"></i> Sign In
-              </button>
+                  <!-- Product Details -->
+                  <div class="col-8 col-md-3 pe-0">
+                    <p class="mb-1 fw-medium text-truncate">
+                      {{ item.menu_item.item_name }}
+                    </p>
+                    <p class="small text-muted mb-0">
+                      ₹{{ item.menu_item.price }}
+                    </p>
+                  </div>
+
+                  <!-- Action Items (Price + Quantity + Delete) -->
+                  <div class="col-12 col-md-7 mt-2 mt-md-0">
+                    <div class="row align-items-center justify-content-between">
+                      
+                      <!-- Total Price (Leftmost) -->
+                      <div class="col-4 col-md-3 text-start ps-0">
+                        <p class="mb-0 ms-4 fw-medium">
+                          ₹{{ item.total_price }}
+                        </p>
+                      </div>
+                  
+                      <!-- Quantity Controls (Centered) -->
+                      <div class="col-4 col-md-5 text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <button 
+                            (click)="updateQuantity(item.menu_item.id,'decrement')" 
+                            class="btn btn-link text-danger p-0 me-1" 
+                            style="min-width: 24px"
+                          >
+                            <i class="fas fa-minus"></i>
+                          </button>
+                          
+                          <div class="text-center px-2" style="width: 40px; font-weight: 500;">
+                            {{ item.quantity }}
+                          </div>
+                          
+                          <button 
+                            (click)="updateQuantity(item.menu_item.id,'increment')" 
+                            class="btn btn-link text-danger p-0 ms-1" 
+                            style="min-width: 24px"
+                          >
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+                  
+                      <!-- Delete Button (Rightmost) -->
+                      <div class="col-4 col-md-2 text-end pe-0">
+                        <button (click)="deleteitem(item.menu_item.id)" class="text-danger" style="cursor: pointer">
+                          <i class="bi bi-trash3-fill"></i>                 
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
+          <!-- No Orders Section -->
+          <ng-template #noOrders>
+            <div class="text-center py-4">
+              <div class="d-flex justify-content-center mb-3">
+                <img
+                  src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-download-in-svg-png-gif-file-formats--shopping-ecommerce-simple-error-state-pack-user-interface-illustrations-6024626.png"
+                  alt="Empty Cart" class="img-fluid" style="max-width: 200px" />
+              </div>
+
+              <div *ngIf="isLoggedIn">
+                <h5 class="fw-medium mb-2">Your cart feels lonely</h5>
+                <p class="text-muted small mb-3">
+                  Add some delicious items to get started!
+                </p>
+                <button class="btn btn-danger px-4 py-1 rounded-pill" [routerLink]="'menu'">
+                  <i class="fas fa-utensils me-1"></i> Explore Menu
+                </button>
+              </div>
+
+              <div *ngIf="!isLoggedIn">
+                <h5 class="fw-medium mb-2">Please sign in first</h5>
+                <p class="text-muted small mb-3">
+                  Login to view and manage your cart
+                </p>
+                <button class="btn btn-danger px-4 py-1 rounded-pill" (click)="goToLogin()">
+                  <i class="fas fa-sign-in-alt me-1"></i> Sign In
+                </button>
+              </div>
+            </div>
+          </ng-template>
         </ng-template>
       </div>
 
-      <!-- Order Summary Column (Right) - Restored to original position -->
-      <div *ngIf="cartitems.length > 0" class="col-12 col-md-4 col-lg-4">
+      <!-- Order Summary Column (Right) - Loading State -->
+      <div *ngIf="loading" class="col-12 col-md-4 col-lg-4">
+        <div class="sticky-top" style="top: 1rem">
+          <div class="summary-box bg-white border p-3 rounded-3 shadow-sm">
+            <p-skeleton width="150px" height="24px" styleClass="mb-3"></p-skeleton>
+
+            <div class="d-flex justify-content-between mb-2 small">
+              <p-skeleton width="80px" height="16px"></p-skeleton>
+              <p-skeleton width="60px" height="16px"></p-skeleton>
+            </div>
+
+            <div class="d-flex justify-content-between mb-2 small">
+              <p-skeleton width="80px" height="16px"></p-skeleton>
+              <p-skeleton width="60px" height="16px"></p-skeleton>
+            </div>
+
+            <div class="d-flex justify-content-between mb-2 small">
+              <p-skeleton width="80px" height="16px"></p-skeleton>
+              <p-skeleton width="60px" height="16px"></p-skeleton>
+            </div>
+
+            <div class="d-flex justify-content-between pt-2 mt-2 border-top">
+              <p-skeleton width="60px" height="20px"></p-skeleton>
+              <p-skeleton width="80px" height="20px"></p-skeleton>
+            </div>
+
+            <p-skeleton width="100%" height="40px" borderRadius="16px" styleClass="mt-3"></p-skeleton>
+            
+            <div class="text-center mt-2">
+              <p-skeleton width="120px" height="16px"></p-skeleton>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Column (Right) - Content -->
+      <div *ngIf="!loading && cartitems.length > 0" class="col-12 col-md-4 col-lg-4">
         <div class="sticky-top" style="top: 1rem">
           <div class="summary-box bg-white border p-3 rounded-3 shadow-sm">
             <h5 class="fw-bold mb-3 text-black">
@@ -191,7 +274,7 @@
           </div>
           <h5 class="fw-bold mb-2">Confirm Your Order</h5>
           <p class="text-muted small mb-4">
-            Total: ₹ 4 ({{ cartitems.length }} items)
+            Total: ₹ {{total_price+platform_fee}} ({{ cartitems.length }} items)
           </p>
           <div class="d-flex justify-content-center gap-2">
             <button type="button" class="btn btn-outline-danger px-4 rounded-pill" data-bs-dismiss="modal">

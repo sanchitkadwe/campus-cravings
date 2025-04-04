@@ -167,6 +167,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     permission_classes= [AllowAny]
+    http_method_names=['get','delete']
     
     @action(detail=False, methods=['get'])
     def getmenu(self,request):
@@ -180,6 +181,10 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
         serialized_data = MenuItemSerializer(menu_items, many=True) 
         return Response(serialized_data.data, status=status.HTTP_200_OK)
+    
+
+
+
                                                  
 
 

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 
 export class CategoriesService  {
-   private apiUrl = 'http://10.130.150.228:8000/app/categories/';  
+   private apiUrl = 'http://localhost:8000/app/categories/';  
     
   constructor(private httpclient: HttpClient) {}
 
@@ -16,16 +16,16 @@ export class CategoriesService  {
 
   }
 
-  updateCategory(id:number,name:string){
+  updateCategory(id:number,name:string):Observable<any>{
     return this.httpclient.put(this.apiUrl,{name},{withCredentials:true})
   }
 
-  createCategory(name: string){
-    return this.httpclient.post(this.apiUrl,{"name":name},{withCredentials:true})
+  createCategory(name: string):Observable<any>{
+    return this.httpclient.post(this.apiUrl,{"category_name":name},{withCredentials:true})
   }
 
-  deleteCategory(id:number){
-    this.httpclient.delete(this.apiUrl,{withCredentials:true})
+  deleteCategory(id:number):Observable<any>{
+    return this.httpclient.delete(this.apiUrl+{id}+'/',{withCredentials:true})
   }
 
 }

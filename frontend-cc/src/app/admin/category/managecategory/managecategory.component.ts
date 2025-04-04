@@ -3,7 +3,7 @@ import { CategoriesService } from '../../../services/category/categories.service
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-
+import { NgModel } from '@angular/forms';
 @Component({
   selector: 'app-managecategory',
   imports: [CommonModule,ToastModule],
@@ -18,6 +18,7 @@ export class ManagecategoryComponent implements OnInit {
     private messageservice : MessageService,
   ){  }
 
+  
   categories : any []=[]
   ngOnInit(): void {
     this.getCategory();
@@ -36,33 +37,49 @@ export class ManagecategoryComponent implements OnInit {
 
   updateCategory(id:number,name :string){
     this.categoryservice.updateCategory(id,name)
+    .subscribe({
+      next: (response: any) => {
+        this.showDialog(true,'Category updated successfully')
+        this.getCategory()
+      },
+      error: (err: any) => {
+        this.showDialog(false,'Unable to update. Please try again')
+      }
+    })
   }
 
   createCategory(name : string){
     this.categoryservice.createCategory(name)
     .subscribe({
       next: (response: any) => {
-        this.categories = response;
         this.getCategory()
-        this.showDialog(true)
+        this.showDialog(true,'New category has been created !')
       },
       error: (err: any) => {
-        this.showDialog(false)
+        this.showDialog(false,'Could not create new. Please try again')
       }
     })
   }
 
   deleteCateogory(id:number){
     this.categoryservice.deleteCategory(id)
-    this.getCategory()
+    .subscribe({
+      next: (response: any) => {
+        this.showDialog(true,'Category deleted successfully')
+        this.getCategory()
+      },
+      error: (err: any) => {
+        this.showDialog(false,'Unable to delete. Please try again')
+      }
+    })
   }
 
-  showDialog(status:boolean){
+  showDialog(status:boolean,detail:string){
     if(status){
-      this.messageservice.add({severity:'success',summary:'Successful',detail:'New category has been created !',key:'br',life:2500})
+      this.messageservice.add({severity:'success',summary:'Successful',detail:detail,key:'br',life:2500})
     }
     else{
-      this.messageservice.add({severity:'error',summary:'Failed !',detail:'Could not create new. Please try again',key:'br',life:2500})
+      this.messageservice.add({severity:'error',summary:'Failed !',detail:detail,key:'br',life:2500})
 
     }
   }
