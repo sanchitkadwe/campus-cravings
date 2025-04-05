@@ -14,6 +14,8 @@ import { ManagemenuComponent } from './admin/menu/managemenu/managemenu.componen
 import { ManageordersComponent } from './admin/orders/manageorders/manageorders.component';
 import { AdminOrderviewComponent } from './admin/orders/orderview/orderview.component';
 import { AdminlayoutComponent } from './admin/adminlayout/adminlayout.component';
+import { PaymentHomeComponent } from './payments/home/home.component';
+import { ConfirmedComponent } from './payments/confirmed/confirmed/confirmed.component';
 
 export const routes: Routes = [
     {
@@ -80,7 +82,15 @@ export const routes: Routes = [
 
         ]
     },
-    
+    {
+        path:'payment',
+        component:PaymentHomeComponent
+    },
+    {
+        path:'orderconfirmed',
+        component:ConfirmedComponent,
+
+    },
     {
         path:'**',
         redirectTo:''

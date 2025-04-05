@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CartService } from '../../services/cart/cart.service';
 import { LoginComponent } from '../../auth/login/login.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { SkeletonModule } from 'primeng/skeleton';
+
 @Component({
   selector: 'app-cartbase',
   imports: [CommonModule,LoginComponent,RouterModule,ToastModule,SkeletonModule ],
@@ -18,6 +19,7 @@ export class CartbaseComponent {
   constructor(
     private cartservice :CartService,
     private messageservice: MessageService,
+    private router :Router,
    ) { }
   // private apiUrl = 'http://localhost:8000/app/cart/mycart/';
   cartitems: any[] = [];
@@ -81,6 +83,11 @@ export class CartbaseComponent {
   }
   closeLogin(){
   } 
+
+  gotoPayments(){
+    this.router.navigate(['payment'])
+
+  }
 
   showDialog(status:boolean){
     if(status){

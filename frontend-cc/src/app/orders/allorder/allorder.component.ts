@@ -29,13 +29,13 @@ export class AllorderComponent implements OnInit {
   openLoginBox= false;
   isLoading = true;
   // In your component.ts file
-filterOptions = [
-  { id: 'allFilter', value: 'all', label: 'All', checked: true },
-  { id: 'activeFilter', value: 'active', label: 'Active' },
-  { id: 'cancelledFilter', value: 'cancelled', label: 'Cancelled' },
-  { id: 'deliveredFilter', value: 'delivered', label: 'Delivered' },
-  { id: 'rejectedFilter', value: 'rejected', label: 'Rejected' }
-];
+  filterOptions = [
+    { id: 'allFilter', value: 'all', label: 'All', checked: true },
+    { id: 'activeFilter', value: 'active', label: 'Active' },
+    { id: 'cancelledFilter', value: 'cancelled', label: 'Cancelled' },
+    { id: 'deliveredFilter', value: 'delivered', label: 'Delivered' },
+    { id: 'rejectedFilter', value: 'rejected', label: 'Rejected' }
+  ];
 
 selectedFilter: string = 'all'; 
 

@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../services/order/order.service';
 import { CommonModule, Location } from '@angular/common';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-orderview',
-  imports: [CommonModule,NgxSpinnerModule],
+  imports: [CommonModule],
   templateUrl: './orderview.component.html',
   styleUrl: './orderview.component.css'
 })
@@ -16,17 +15,14 @@ export class OrderviewComponent implements OnInit {
     private route: ActivatedRoute,
     private orderService: OrderService,
     private location: Location,
-    private spinner:NgxSpinnerService,
   ) { }
 
   order : any ;
   orderId: any;
   loading = true;
-  itemname = "Paneer tikka masala";
-
+  platform_fee : number = 10;
 
   ngOnInit(): void {
-    // this.spinner.show();
     this.orderId = this.route.queryParamMap.subscribe(
       (params) => {
         this.orderId = params.get('id');
@@ -43,11 +39,9 @@ export class OrderviewComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.order = response
-          this.spinner.hide();
 
         },
         error: (err: any) => {
-          this.spinner.hide();
         }
       })
 

@@ -1,0 +1,132 @@
+:root {
+  --primary-color: #5e72e4;
+  --secondary-color: #f7fafc;
+  --success-color: #2dce89;
+  --danger-color: #f5365c;
+  --warning-color: #fb6340;
+}
+
+body {
+  background-color: #f8f9fa;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.payment-container {
+  max-width: 800px;
+  margin: 30px auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.payment-header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.payment-body {
+  background-color: white;
+  padding: 30px;
+}
+
+.payment-methods .nav-link {
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  margin: 5px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.payment-methods .nav-link.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.payment-methods .nav-link i {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(94, 114, 228, 0.25);
+}
+
+.card-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: var(--primary-color);
+}
+
+.payment-summary {
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.payment-summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.payment-summary-total {
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-top: 1px solid #dee2e6;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.btn-pay {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.btn-pay:hover {
+  background-color: #4a5acf;
+  color: white;
+}
+
+.secure-badge {
+  background-color: var(--success-color);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.secure-badge i {
+  margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+  .payment-methods .nav-link {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .payment-methods .nav-link i {
+    font-size: 20px;
+    margin-right: 5px;
+  }
+
+  .payment-body {
+    padding: 20px;
+  }
+}

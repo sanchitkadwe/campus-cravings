@@ -8,6 +8,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../../services/auth/auth.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-login',
   imports: [RouterModule,CommonModule, Dialog, ButtonModule, InputTextModule, FormsModule,ToastModule],
@@ -21,7 +23,11 @@ export class LoginComponent implements OnInit {
     private authservice : AuthService,
     private messageservice : MessageService,
     private router: Router,
+    private fb: FormBuilder,
   ){}
+
+
+  
 
   login_data = { 
     phone_number: '', 

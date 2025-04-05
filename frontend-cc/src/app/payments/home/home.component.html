@@ -1,1 +1,45 @@
-<p>home works!</p>
+<div class="container-fluid">
+    <div class="payment-container">
+        <!-- Header -->
+        <div class="payment-header">
+            <h2><i class="bi bi-lock-fill"></i> Secure Payment</h2>
+            <p class="mb-0">Complete your purchase with confidence</p>
+        </div>
+        
+        <div class="payment-body">
+            <div class="tab-content" id="paymentMethodsTabContent">
+                <!-- PayPal Tab -->
+                <div class="tab-pane fade show active" id="paypal" role="tabpanel" aria-labelledby="paypal-tab">
+                    <div class="text-center py-4">
+                        <i class="bi bi-paypal" style="font-size: 4rem; color: #003087;"></i>
+                        <h4 class="my-3">Pay with PayPal</h4>
+                        <p>You will be redirected to PayPal to complete your payment securely.</p>
+
+                        <!-- Payment Summary -->
+                        <div class="payment-summary">
+                            <h5>Order Summary</h5>
+                            <div class="payment-summary-item">
+                                <span>Subtotal</span>
+                                <span>&#64;100</span>
+                            </div>
+                            <div class="payment-summary-item">
+                                <span>Platform Fee</span>
+                                <span>&#64;112</span>
+                            </div>
+                            <div class="payment-summary-item payment-summary-total">
+                                <span>Total</span>
+                                <span>&#64;797</span>
+                            </div>
+                        </div>
+
+                        <button (click)="gotoConfirmed()" class="btn btn-pay rounded-pill px-4" style="background-color: #003087; color: white;">
+                            <i class="bi bi-paypal me-2"></i> Continue with PayPal
+                        </button>
+
+                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
