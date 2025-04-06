@@ -11,32 +11,33 @@ class Store(models.Model):
 
 class User(AbstractUser):
 
-    email = None
+    # email = None
     first_name = None
     last_name = None 
-    username = None
+    # username = None
 
-    ROLE_CHOICES = (
+    ROLE_CHOICES = [
         ('user', 'User'),
         ('canteen_manager', 'Canteen Manager'),
         ('super_admin', 'Super Admin'),
-    )
+    ]
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
     name= models.CharField(max_length=20,default="user",blank=False,null=False)
     hostel=models.IntegerField(default=1)
-    phone_number= models.CharField(max_length=15,unique=True)
+    phone_number= models.CharField(max_length=15,unique=True,default="123")
     password = models.CharField(max_length=100,blank=False,null= False,unique= True)
+    
 
     USERNAME_FIELD = "phone_number"
-    REQUIRED_FIELDS = ["role"]  
+    REQUIRED_FIELDS = ["name","role","username"]  
 
 
     def is_admin(self):
-        return self.role==self.ROLE_CHOICES.user
+        return self.role=='canteen_manager'
     
     def is_user(self):
-        return self.role==self.ROLE_CHOICES.canteen_manager
+        return self.role=='user'
    
     def __str__(self):
         return self.name
