@@ -57,6 +57,12 @@ jobs:
           ssh-keyscan -H ${{ secrets.PROD_SERVER_IP }} >> ~/.ssh/known_hosts
 
       # Step 4: Run Deployment Script on OCI Server
+      # - name: Run deployment script
+      #   run: |
+      #     ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_IP }} 'bash -s' < ./backend-cc/deployments/deploy.sh
       - name: Run deployment script
+        env:
+          PROD_SERVER_USER: ${{ secrets.PROD_SERVER_USER }}
+          PROD_SERVER_IP: ${{ secrets.PROD_SERVER_IP }}
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_IP }} 'bash -s' < ./backend-cc/deployments/deploy.sh
+          ssh -T -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa "$PROD_SERVER_USER@$PROD_SERVER_IP" 'bash -s' < ./backend-cc/deployments/deploy.sh
