@@ -59,4 +59,4 @@ jobs:
       # Step 4: Run Deployment Script on OCI Server
       - name: Run deployment script
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USERNAME }}@${{ secrets.PROD_SERVER_IP }} 'bash -s' < ./backend-cc/deployments/deploy.sh
+          ssh -i ~/.ssh/id_rsa ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_IP }} 'bash -s' < ./backend-cc/deployments/deploy.sh
