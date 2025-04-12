@@ -1,3 +1,9 @@
+import base64
+import hashlib
+import json
+import time
+import requests
+import uuid
 from rest_framework import viewsets
 from .models import User, Category, MenuItem, CartItem, ActiveOrder, Payment, Store,OrderItem,OrderItemHistory,OrderHistory
 from .serializers import UserSerializer, CategorySerializer, MenuItemSerializer, CartItemSerializer, ActiveOrderSerializer, PaymentSerializer,StoreSerializer,LoginSerializer,OrderHistorySerializer,OrderItemSerializer
@@ -16,6 +22,8 @@ from rest_framework.pagination import PageNumberPagination
 from django.db import transaction
 from django.db.models import Sum
 from .permissions import IsAdmin, IsUser
+from .serializers import PaymentInitiateSerializer
+
 
 class StoreViewSet(viewsets.ModelViewSet):
     queryset = Store.objects.all()
@@ -536,9 +544,133 @@ class OrderHistoryViewset(viewsets.ModelViewSet):
 
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
+    serializer_class = PaymentInitiateSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [CookieJWTAuthentication]
 
+    # Sandbox credentials
+    MERCHANT_ID = "PGTESTPAYUAT"
+    SALT_KEY = "099eb0cd-02cf-4e2a-8aca-3e6c6aff0399"
+    SALT_INDEX = 1
+    BASE_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox"
+    PHONEPE_BASE_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox"
+    FRONTEND_URL = "http://localhost:4200"
+    BACKEND_URL = "http://localhost:8000"
     
+    
+    @action(detail=False, methods=['post'])
+    def initiate(self, request):
+        # Initialize serializer with request context
+        serializer = self.get_serializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        
+        # This will now work because create() is implemented in serializer
+        payment = serializer.save(status='Pending')
+        
+        data = {
+            "merchantId": self.MERCHANT_ID,
+            "merchantTransactionId": payment.transaction_id,
+            "merchantUserId": f"USER_{request.user.id}",
+            "amount": int(payment.amount * 100),  # Convert to paise
+            "redirectUrl": f"{self.FRONTEND_URL}/payment-callback",
+            "redirectMode": "POST",
+            "callbackUrl": f"{self.BACKEND_URL}/api/payments/{payment.id}/webhook/",
+            "paymentInstrument": {
+                "type": "PAY_PAGE"
+            }
+        }
+        
+        try:
+            # Generate checksum
+            encoded_data = base64.b64encode(json.dumps(data).encode()).decode()
+            string_to_hash = f"{encoded_data}/pg/v1/pay{self.SALT_KEY}"
+            sha256_hash = hashlib.sha256(string_to_hash.encode()).hexdigest()
+            checksum = f"{sha256_hash}###{self.SALT_INDEX}"
+            
+            headers = {
+                "Content-Type": "application/json",
+                "X-VERIFY": checksum,
+                "accept": "application/json"
+            }
+            
+            response = requests.post(
+                f"{self.BASE_URL}/pg/v1/pay",
+                headers=headers,
+                json={"request": encoded_data},
+                timeout=10
+            )
+            
+            response.raise_for_status()
+            response_data = response.json()
+            
+            if not response_data.get('success', False):
+                payment.status = 'Failed'
+                payment.save()
+                return Response({
+                    'success': False,
+                    'error': response_data.get('message', 'Payment gateway error'),
+                    'code': response_data.get('code', 'UNKNOWN_ERROR')
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Store the gateway response
+            payment.gateway_response = response_data
+            payment.save()
+            
+            return Response({
+                'success': True,
+                'payment_url': response_data['data']['instrumentResponse']['redirectInfo']['url'],
+                'transaction_id': payment.transaction_id
+            })
+            
+        except requests.exceptions.RequestException as e:
+            payment.status = 'Failed'
+            payment.save()
+            return Response({
+                'success': False,
+                'error': f"Payment gateway connection error: {str(e)}"
+            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+            
+        except Exception as e:
+            payment.status = 'Failed'
+            payment.save()
+            return Response({
+                'success': False,
+                'error': f"Unexpected error: {str(e)}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    @action(detail=True, methods=['post'])
+    def webhook(self, request, pk=None):
+        try:
+            payment = self.get_queryset().get(pk=pk)
+            x_verify = request.headers.get('X-VERIFY')
+            
+            # Verify the checksum
+            response_data = request.data
+            encoded_data = base64.b64encode(json.dumps(response_data).encode()).decode()
+            expected_checksum = hashlib.sha256(
+                f"{encoded_data}{self.SALT_KEY}"
+            ).hexdigest() + f"###{self.SALT_INDEX}"
+            
+            if x_verify != expected_checksum:
+                return Response({"status": "invalid signature"}, status=400)
+            
+            # Update payment status based on response
+            code = response_data.get('code')
+            if code == 'PAYMENT_SUCCESS':
+                payment.status = 'Completed'
+            elif code == 'PAYMENT_ERROR':
+                payment.status = 'Failed'
+            else:
+                payment.status = 'Pending'
+                
+            payment.gateway_response = response_data
+            payment.save()
+            
+            return Response({"status": "processed"})
+            
+        except Payment.DoesNotExist:
+            return Response({"status": "payment not found"}, status=404)
+        except Exception as e:
+            return Response({"status": f"error: {str(e)}"}, status=500)
 

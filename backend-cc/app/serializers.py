@@ -1,5 +1,6 @@
+import uuid
 from rest_framework import serializers
-from .models import User,MenuItem,ActiveOrder,CartItem,Payment,Category, Store,OrderItem,OrderHistory,OrderItemHistory
+from .models import User,MenuItem,ActiveOrder,CartItem,Payment,Category, Store,OrderItem,OrderHistory,OrderItemHistory,DummyPayment
 
 
 class StoreSerializer(serializers.ModelSerializer):
@@ -22,10 +23,18 @@ class ActiveOrderSerializer(serializers.ModelSerializer):
         fields = ['id', 'ordered_by', 'total_price', 'status', 'order_time']
 
 class PaymentSerializer(serializers.ModelSerializer):
-
+    order = ActiveOrderSerializer()
+    
     class Meta:
         model = Payment
-        fields = [ 'status', 'payment_time','transaction_id']
+        fields = ['order', 'status', 'payment_time', 'transaction_id']
+    
+    def create(self, validated_data):
+        order_data = validated_data.pop('order')
+        order = ActiveOrder.objects.create(**order_data)
+        payment = Payment.objects.create(order=order, **validated_data)
+        return payment
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -73,7 +82,28 @@ class OrderItemHistory(serializers.Serializer):
         model = OrderItemHistory
         fields = '__all__'
 
-class OrderHistorySerializer(serializers.Serializer):
+class OrderHistorySerializer(serializers.ModelSerializer):
     class Meta : 
         model = OrderHistory
         fields = '__all__'
+
+
+class PaymentInitiateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DummyPayment
+        fields = ['amount', 'currency', 'status']  # Add other fields as needed
+        read_only_fields = ['status', 'transaction_id', 'user']
+    
+    def create(self, validated_data):
+        # Get the user from the request context
+        user = self.context['request'].user
+        
+        # Create payment with generated transaction ID
+        payment = DummyPayment.objects.create(
+            user=user,
+            transaction_id=str(uuid.uuid4()),
+            **validated_data
+        )
+        return payment
+
+

@@ -30,7 +30,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class HomeComponent implements OnInit, OnChanges {
   
   @Input() menuItems: any[] = [];
-
+    
+  isLoading= true;
   category: string | null = null;
   selectedCategory: string = 'all';
   itemQuantities: { [itemId: number]: number } = {};
@@ -73,7 +74,6 @@ export class HomeComponent implements OnInit, OnChanges {
           this.categories = response;
         },
         error: (err: any) => {
-          console.error('Error fetching categories:', err);
         }
       });
   }
@@ -86,9 +86,11 @@ export class HomeComponent implements OnInit, OnChanges {
           this.menuItems.forEach(item => {
             this.itemQuantities[item.id] = 1;
           });
+          this.isLoading=false;
         },
         error: (err: any) => {
           console.error('Error fetching menu:', err);
+          this.isLoading= false;
         }
       });
   }

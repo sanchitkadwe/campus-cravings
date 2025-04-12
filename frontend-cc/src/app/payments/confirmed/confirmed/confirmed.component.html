@@ -4,37 +4,72 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center p-5">
 
-                    <!-- Success Icon -->
-                    <div class="mb-4">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle"
-                            style="width: 80px; height: 80px;">
-                            <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
-                        </div>
-                    </div>
-
-                    <!-- Heading -->
-                    <h2 class="fw-bold mb-3">Order Confirmed!</h2>
-                    <p class="text-muted mb-4">Your payment was successful and your order is being processed.</p>
-
-
-
-                    <!-- Delivery Info -->
-                    <div class="alert alert-success mb-4 text-start">
-                        <div class="d-flex">
-                            <i class="bi bi-info-circle-fill me-2"></i>
-                            <div>
-
-                                <p class="mb-0 small">Your order will be delivered within 30-45 minutes. </p>
+                    <!-- Success Message (shown when paymentSuccess is true) -->
+                    <div *ngIf="paymentSuccess === 'SUCCESS'; else paymentFailed">                       
+                         <!-- Success Icon -->
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle"
+                                style="width: 80px; height: 80px;">
+                                <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
                             </div>
                         </div>
+
+                        <!-- Heading -->
+                        <h2 class="fw-bold mb-3">Order Confirmed!</h2>
+                        <p class="text-muted mb-4">Your payment was successful and your order is being processed.</p>
+
+                        <!-- Delivery Info -->
+                        <div class="alert alert-success mb-4 text-start">
+                            <div class="d-flex">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                <div>
+                                    <p class="mb-0 small">Your order will be delivered within 30-45 minutes.</p>
+                                    <p>Transaction ID: {{ transactionId }}</p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <button (click)="gotoHome()" class="btn btn-outline-danger py-2 rounded-pill">
+                            <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                        </button>
                     </div>
 
+                    <!-- Failed Payment Message (shown when paymentSuccess is false) -->
+                    <ng-template #paymentFailed>
+                        <!-- Error Icon -->
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-circle"
+                                style="width: 80px; height: 80px;">
+                                <i class="bi bi-x-circle-fill text-danger" style="font-size: 2.5rem;"></i>
+                            </div>
+                        </div>
 
-                    <button (click)="gotoHome()" class="btn btn-outline-danger py-2 rounded-pill">
-                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
-                    </button>
+                        <!-- Heading -->
+                        <h2 class="fw-bold mb-3">Payment Failed!</h2>
+                        <p class="text-muted mb-4">We couldn't process your payment. Please try again.</p>
 
+                        <!-- Error Info -->
+                        <div class="alert alert-danger mb-4 text-start">
+                            <div class="d-flex">
+                                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                <div>
+                                    <p class="mb-0 small">Your order was not placed due to payment failure. </p>
+                                    <p>Reason: {{ errorMessage }}</p>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3 justify-content-center">
+                            <button (click)="retryPayment()" class="btn btn-danger py-2 rounded-pill">
+                                <i class="bi bi-credit-card me-2"></i>Retry Payment
+                            </button>
+                            <button (click)="gotoHome()" class="btn btn-outline-secondary py-2 rounded-pill">
+                                <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                            </button>
+                        </div>
+                    </ng-template>
 
                 </div>
             </div>

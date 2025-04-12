@@ -1,0 +1,22 @@
+name : Django CI/CD Pipeline
+
+on : 
+    push :
+        branches :
+            -main
+        paths :
+            ['backend-cc/**']
+
+    
+jobs :
+    build-and-push :
+        runs-on : ubuntu-latest
+
+        steps :
+
+            
+
+
+
+    
+

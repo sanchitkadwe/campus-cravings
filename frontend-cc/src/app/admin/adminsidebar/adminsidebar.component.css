@@ -240,8 +240,31 @@ input:checked + .slider:before {
         padding-bottom: 80px;
     }
 
-    /* Hide some text on mobile for better fit */
     .store-status span {
-        display: none;
+        display: inline; 
+        font-size: 14px; 
+    }
+
+    .toggle-switch {
+        width: 36px;
+        height: 20px;
+    }
+    
+    .slider:before {
+        height: 16px;
+        width: 16px;
+    }
+    
+    input:checked + .slider:before {
+        transform: translateX(18px);
     }
 }
+
+
+
+
+
+
+
+
+

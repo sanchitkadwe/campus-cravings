@@ -1,8 +1,6 @@
 <div class="card flex justify-center">
-  <p-toast position="bottom-right" key="br" [baseZIndex]="5000">
-  </p-toast>
+  <p-toast position="bottom-right" key="br" [baseZIndex]="5000"></p-toast>
 </div>
-
 
 <div class="content-area">
   <div class="content-container">
@@ -19,8 +17,49 @@
       </button>
     </div>
 
-    <!-- Items Table -->
-    <div class="card border-0 shadow-sm rounded-3">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="card border-0 shadow-sm rounded-3">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="bg-light bg-opacity-10">
+              <tr>
+                <th class="ps-4" width="60px"><p-skeleton width="40px" height="20px"></p-skeleton></th>
+                <th width="80px"><p-skeleton width="60px" height="20px"></p-skeleton></th>
+                <th><p-skeleton width="120px" height="20px"></p-skeleton></th>
+                <th><p-skeleton width="100px" height="20px"></p-skeleton></th>
+                <th><p-skeleton width="80px" height="20px"></p-skeleton></th>
+                <th><p-skeleton width="120px" height="20px"></p-skeleton></th>
+                <th class="pe-4" width="140px"><p-skeleton width="100px" height="20px"></p-skeleton></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of [1,2,3,4,5]" class="border-bottom border-light">
+                <td class="ps-3"><p-skeleton width="30px" height="20px"></p-skeleton></td>
+                <td>
+                  <p-skeleton shape="circle" size="50px"></p-skeleton>
+                </td>
+                <td><p-skeleton width="150px" height="20px"></p-skeleton></td>
+                <td><p-skeleton width="100px" height="24px" borderRadius="16px"></p-skeleton></td>
+                <td><p-skeleton width="70px" height="20px"></p-skeleton></td>
+                <td>
+                  <p-skeleton width="100px" height="24px" borderRadius="16px"></p-skeleton>
+                </td>
+                <td class="pe-4">
+                  <div class="d-flex justify-content-end gap-2">
+                    <p-skeleton shape="circle" size="32px"></p-skeleton>
+                    <p-skeleton shape="circle" size="32px"></p-skeleton>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loaded Content -->
+    <div *ngIf="!isLoading" class="card border-0 shadow-sm rounded-3">
       <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table table-hover align-middle mb-0">
@@ -81,6 +120,7 @@
 </div>
 
 
+
 <!-- Add/Edit Item Modal -->
 <div class="modal fade" id="menuModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -128,7 +168,8 @@
       </div>
       <div class="modal-footer border-0">
         <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
-        <button (click)="updatemenuItem('info')" type="button" class="btn btn-primary px-4 rounded-pill" data-bs-dismiss="modal">Save
+        <button (click)="updatemenuItem('info')" type="button" class="btn btn-primary px-4 rounded-pill"
+          data-bs-dismiss="modal">Save
           Item</button>
       </div>
     </div>
@@ -151,7 +192,8 @@
         </p>
         <div class="d-flex justify-content-center gap-3">
           <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
-          <button (click)="deletemenuItem(4)" type="button" class="btn btn-danger px-4 rounded-pill" data-bs-dismiss="modal">Delete</button>
+          <button (click)="deletemenuItem(4)" type="button" class="btn btn-danger px-4 rounded-pill"
+            data-bs-dismiss="modal">Delete</button>
         </div>
       </div>
     </div>

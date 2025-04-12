@@ -4,11 +4,11 @@ import { CategoriesService } from '../../../services/category/categories.service
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-managemenu',
-  imports: [CommonModule,ToastModule],
+  imports: [CommonModule,ToastModule,SkeletonModule],
   templateUrl: './managemenu.component.html',
   styleUrl: './managemenu.component.css',
   providers:[MessageService]
@@ -24,6 +24,7 @@ export class ManagemenuComponent implements OnInit{
 
   categories : any[]=[];
   menuItems : any[]=[];
+  isLoading= true;
 
   ngOnInit(): void {
       this.getMenu();
@@ -35,6 +36,7 @@ export class ManagemenuComponent implements OnInit{
     .subscribe({
       next: (response: any) => {
         this.menuItems = response;
+        this.isLoading = false;
       },
       error: (err: any) => {
       }

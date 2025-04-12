@@ -16,6 +16,7 @@ import { AdminOrderviewComponent } from './admin/orders/orderview/orderview.comp
 import { AdminlayoutComponent } from './admin/adminlayout/adminlayout.component';
 import { PaymentHomeComponent } from './payments/home/home.component';
 import { ConfirmedComponent } from './payments/confirmed/confirmed/confirmed.component';
+import { PaymentloadingComponent } from './payments/paymentloading/paymentloading.component';
 
 export const routes: Routes = [
     {
@@ -90,6 +91,10 @@ export const routes: Routes = [
         path:'orderconfirmed',
         component:ConfirmedComponent,
 
+    },
+    {
+        path : 'processingpayment',
+        component:PaymentloadingComponent
     },
     {
         path:'**',

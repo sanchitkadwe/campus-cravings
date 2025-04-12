@@ -1,15 +1,14 @@
 <div class="card flex justify-center">
-  <p-toast position="bottom-right" key="br" [baseZIndex]="5000">
-  </p-toast>
+  <p-toast position="bottom-right" key="br" [baseZIndex]="5000"></p-toast>
 </div>
 
 <div class="container-fluid p-0">
   <!-- Category Navigation with Skeleton -->
   <nav class="category-nav py-2 w-100">
     <div class="container">
-      <div class="category-scroll-containe">
+      <div class="category-scroll-container">
         <div class="d-flex flex-nowrap gap-2">
-          <ng-container *ngIf="categories; else categorySkeleton">
+          <ng-container *ngIf="!isLoading; else categorySkeleton">
             <button
               class="category-btn"
               [class.active]="!selectedCategory || selectedCategory === 'all'"
@@ -27,9 +26,10 @@
             </button>
           </ng-container>
           <ng-template #categorySkeleton>
-            <p-skeleton width="4rem" height="2rem" styleClass="me-2"></p-skeleton>
-            <p-skeleton width="6rem" height="2rem" styleClass="me-2"></p-skeleton>
-            <p-skeleton width="5rem" height="2rem" styleClass="me-2"></p-skeleton>
+            <p-skeleton width="4rem" height="2rem" borderRadius="20px" styleClass="me-2"></p-skeleton>
+            <p-skeleton width="6rem" height="2rem" borderRadius="20px" styleClass="me-2"></p-skeleton>
+            <p-skeleton width="5rem" height="2rem" borderRadius="20px" styleClass="me-2"></p-skeleton>
+            <p-skeleton width="4rem" height="2rem" borderRadius="20px" styleClass="me-2"></p-skeleton>
           </ng-template>
         </div>
       </div>
@@ -42,7 +42,7 @@
       <div class="col-xxl-7 col-xl-8 col-lg-9 col-md-10">
         <div class="row g-4">
           <!-- Skeleton when loading -->
-          <ng-container *ngIf="menuItems; else menuItemsSkeleton">
+          <ng-container *ngIf="!isLoading; else menuItemsSkeleton">
             <!-- Single Card Template -->
             <div
               *ngFor="let item of menuItems"
@@ -57,7 +57,7 @@
                     <span>Out of Stock</span>
                   </div>
                   <img
-                    src="https://www.vegrecipesofindia.com/wp-content/uploads/2021/02/schezwan-fried-rice.jpg"
+                    [src]="item.image || 'https://www.vegrecipesofindia.com/wp-content/uploads/2021/02/schezwan-fried-rice.jpg'"
                     class="menu-image w-100"
                   />
                 </div>
@@ -84,9 +84,7 @@
                           </option>
                         </select>
                         <button
-                          (click)="
-                            addtoCart(item.id, itemQuantities[item.id],item.item_name);
-                          "
+                          (click)="addtoCart(item.id, itemQuantities[item.id], item.item_name)"
                           class="add-to-cart"
                         >
                           Add to Cart
@@ -110,7 +108,7 @@
           <ng-template #menuItemsSkeleton>
             <div *ngFor="let item of [1,2,3,4,5,6]" class="col-12 col-md-6 col-lg-4 d-flex">
               <article class="menu-card w-100 d-flex flex-column">
-                <p-skeleton width="100%" height="150px"></p-skeleton>
+                <p-skeleton width="100%" height="150px" borderRadius="12px 12px 0 0"></p-skeleton>
                 <div class="p-3 flex-grow-1 d-flex flex-column">
                   <div class="mb-2">
                     <div class="d-flex justify-content-between align-items-start">
@@ -120,8 +118,8 @@
                   </div>
                   <div class="mt-auto">
                     <div class="d-flex justify-content-between align-items-center">
-                      <p-skeleton width="40%" height="2.5rem"></p-skeleton>
-                      <p-skeleton width="50%" height="2.5rem"></p-skeleton>
+                      <p-skeleton width="40%" height="2.5rem" borderRadius="20px"></p-skeleton>
+                      <p-skeleton width="50%" height="2.5rem" borderRadius="20px"></p-skeleton>
                     </div>
                   </div>
                 </div>

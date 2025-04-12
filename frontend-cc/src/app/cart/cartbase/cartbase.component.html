@@ -238,7 +238,6 @@
 
             <button
               type="button"
-              (click)="gotoPayments()"
               class="btn btn-danger w-100 mt-3 rounded-pill py-2"
               data-bs-toggle="modal"
               data-bs-target="#checkoutModal"
@@ -278,7 +277,9 @@
             Total: ₹ {{total_price+platform_fee}} ({{ cartitems.length }} items)
           </p>
           <div class="d-flex justify-content-center gap-2">
-            <button type="button" class="btn btn-outline-danger px-4 rounded-pill" data-bs-dismiss="modal">
+            <button               
+            (click)="gotoPayments()"
+            type="button" class="btn btn-outline-danger px-4 rounded-pill" data-bs-dismiss="modal">
               Confirm
             </button>
             <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">

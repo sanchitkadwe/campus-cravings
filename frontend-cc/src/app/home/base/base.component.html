@@ -1,11 +1,61 @@
-<div class=" min-h-screen flex flex-col">
+<div class="min-h-screen flex flex-col">
+  <div class="max-w-screen-xl mx-auto p-4">
+    <!-- Loading State -->
+    <main *ngIf="isLoading" class="flex flex-col lg:flex-row items-center mt-12">
+      <!-- Left Column Skeleton -->
+      <div class="lg:w-1/2 space-y-4">
+        <p-skeleton 
+          width="8rem" 
+          height="2rem" 
+          borderRadius="16px"
+          class="mb-4"
+          animation="wave">
+        </p-skeleton>
+        
+        <p-skeleton 
+          width="100%" 
+          height="3.5rem" 
+          borderRadius="6px" 
+          class="mb-6"
+          animation="wave">
+        </p-skeleton>
+        
+        <p-skeleton 
+          width="100%" 
+          height="1rem" 
+          borderRadius="4px" 
+          class="mb-2"
+          animation="wave">
+        </p-skeleton>
+        <p-skeleton 
+          width="80%" 
+          height="1rem" 
+          borderRadius="4px" 
+          class="mb-6"
+          animation="wave">
+        </p-skeleton>
+        
+        <p-skeleton 
+          width="10rem" 
+          height="3.5rem" 
+          borderRadius="9999px"
+          animation="wave">
+        </p-skeleton>
+      </div>
 
-<div class="max-w-screen-xl mx-auto p-4">
-    <!-- Header -->
-  
-    
-    <!-- Main Content -->
-    <main class="flex flex-col lg:flex-row items-center mt-12">
+      <!-- Right Column Skeleton -->
+      <div class="lg:w-1/2 mt-8 lg:mt-0">
+        <p-skeleton 
+          width="100%" 
+          height="400px" 
+          borderRadius="1.5rem"
+          animation="wave">
+        </p-skeleton>
+      </div>
+    </main>
+
+    <!-- Loaded Content -->
+    <main *ngIf="!isLoading" class="flex flex-col lg:flex-row items-center mt-12">
       <div class="lg:w-1/2 space-y-4">
         <div class="inline-flex items-center bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full">
           <span>Quick delivery</span>
@@ -23,7 +73,6 @@
                 (click)="goToMenu()">
                 Order Now
         </button>
-        
       </div>
   
       <!-- Image -->
@@ -33,8 +82,5 @@
              alt="A delicious meal"/>
       </div>
     </main>
-
+  </div>
 </div>
-</div>
-  
-  

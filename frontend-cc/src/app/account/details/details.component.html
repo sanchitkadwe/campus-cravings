@@ -1,4 +1,3 @@
-
 <div class="container">
   <!-- Logged In Content -->
   <div *ngIf="isLoggedIn" class="row justify-content-center">
@@ -6,18 +5,10 @@
       <div class="profile-card position-relative">
         <!-- Edit and Delete Icons -->
         <div class="position-absolute top-0 end-0 mt-3 me-3">
-          <button
-            (click)="editDetails()"
-            class="btn btn-link text-primary p-0 me-2"
-            title="Edit Profile"
-          >
+          <button (click)="editDetails()" class="btn btn-link text-primary p-0 me-2" title="Edit Profile">
             <i class="fas fa-edit fa-lg"></i>
           </button>
-          <button
-            (click)="showDialog()"
-            class="btn btn-link text-danger p-0"
-            title="Delete Account"
-          >
+          <button (click)="showDialog()" class="btn btn-link text-danger p-0" title="Delete Account">
             <i class="fas fa-trash fa-lg"></i>
           </button>
         </div>
@@ -26,9 +17,7 @@
         <div class="profile-content text-center">
           <img
             src="https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg"
-            alt="Profile Image"
-            class="profile-image"
-          />
+            alt="Profile Image" class="profile-image" />
 
           <h3 class="profile-name pt-3">{{ user?.name }}</h3>
 
@@ -39,7 +28,7 @@
             <p><i class="fas fa-phone me-2"></i>+91 {{ user?.phone_number }}</p>
             <p>
               <i class="fas fa-map-marker-alt me-2"></i>Hostel-{{
-                user?.hostel
+              user?.hostel
               }}, IIT Bombay
             </p>
           </div>
@@ -52,6 +41,9 @@
     </div>
   </div>
 
+
+
+
   <!-- Not Logged In Content -->
   <div *ngIf="!isLoggedIn" class="not-logged-container">
     <div class="not-logged-content">
@@ -61,40 +53,19 @@
       <a (click)="goToLogin()" class="login-btn">Log In</a>
     </div>
   </div>
-
-  <!-- Delete Account Dialog -->
-  <p-dialog
-    header="Delete Account"
-    [(visible)]="visible"
-    [modal]="true"
-    [style]="{ width: 'min(90vw, 400px)' }"
-    [closable]="false"
-  >
-    <div class="dialog-content">
-      <p>Are you sure you want to delete your account?</p>
-      <div class="dialog-buttons">
-        <button
-          pButton
-          type="button"
-          label="Cancel"
-          (click)="visible = false"
-          class="p-button-secondary dialog-btn"
-        ></button>
-        <button
-          pButton
-          type="button"
-          label="Delete"
-          (click)="deleteAccount()"
-          class="p-button-danger dialog-btn"
-        ></button>
-      </div>
-    </div>
-  </p-dialog>
-  <div>
-    <app-login
-      [(visible)]="openLoginBox"
-      (close)="closeLogin()"
-    ></app-login>
-    
-  </div>
 </div>
+
+<!-- Delete Account Dialog -->
+<p-dialog header="Delete Account" [(visible)]="visible" [modal]="true" [style]="{ width: 'min(90vw, 400px)' }"
+  [closable]="false">
+  <div class="dialog-content">
+    <p>Are you sure you want to delete your account?</p>
+    <div class="dialog-buttons">
+      <button pButton type="button" label="Cancel" (click)="visible = false"
+        class="p-button-secondary dialog-btn"></button>
+      <button pButton type="button" label="Delete" (click)="deleteAccount()"
+        class="p-button-danger dialog-btn"></button>
+    </div>
+  </div>
+</p-dialog>
+<app-login [(visible)]="openLoginBox" (close)="closeLogin()"></app-login>

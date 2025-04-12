@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../services/order/order.service';
 import { CommonModule, Location } from '@angular/common';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-orderview',
-  imports: [CommonModule],
+  imports: [CommonModule,SkeletonModule],
   templateUrl: './orderview.component.html',
   styleUrl: './orderview.component.css'
 })
@@ -19,7 +20,7 @@ export class OrderviewComponent implements OnInit {
 
   order : any ;
   orderId: any;
-  loading = true;
+  isLoading = true;
   platform_fee : number = 10;
 
   ngOnInit(): void {
@@ -39,9 +40,12 @@ export class OrderviewComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.order = response
+          this.isLoading=false;
 
         },
         error: (err: any) => {
+          this.isLoading = false;
+          
         }
       })
 

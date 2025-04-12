@@ -29,5 +29,30 @@ export class AdminOrderviewComponent implements OnInit {
   }
 
 
+  // @Input() order: any;
+  orderStatus: string = ''; // 'accepted', 'rejected', 'delivered'
+  orderStatusChanged: boolean = false;
+
+  onAccept() {
+    this.orderStatus = 'accepted';
+    this.orderStatusChanged = true;
+    // Here you would typically call a service to update the order status
+    console.log('Order accepted');
+  }
+
+  onReject() {
+    this.orderStatus = 'rejected';
+    this.orderStatusChanged = true;
+    // Here you would typically call a service to update the order status
+    console.log('Order rejected');
+  }
+
+  onDelivered() {
+    this.orderStatus = 'delivered';
+    // Here you would typically call a service to update the order status
+    console.log('Order marked as delivered');
+  }
+
+
 
 }
