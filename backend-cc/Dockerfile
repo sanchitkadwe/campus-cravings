@@ -5,6 +5,12 @@ FROM python:3.13.2-slim
 # ENV PYTHONUNBUFFERED 1
 # ENV DJANGO_SETTINGS_MODULE=myproject.settings.production
 
+# Installing system deps
+RUN apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    build-essential \
+    pkg-config \
+
 # Set the working directory in the container
 WORKDIR /app
 
