@@ -1,8 +1,10 @@
 #!/bin/bash
 
+PROD_ENV_FILE_PATH="~/.campus_cravings/env/.env"
+
 # Setup the env variables
 set -a
-source ~/mess_manager/env/.env
+source ${PROD_ENV_FILE_PATH}
 set +a
 
 CC_DJANGO_CONTAINER_NAME=campus_cravings_django_prod
@@ -33,8 +35,8 @@ docker run -d \
  -p 8080:8080 \
  --name ${CC_DJANGO_CONTAINER_NAME} \
  --restart unless-stopped \
- --env-file ~/mess_manager/env/.env \
- -v ~/mess_manager/env/.env:/app/.env \
+ --env-file ${PROD_ENV_FILE_PATH} \
+ -v ${PROD_ENV_FILE_PATH}:/app/.env \
  adityaupadhye/${CC_DJANGO_DOCKER_IMAGE}
 
 echo "Docker container ${CC_DJANGO_CONTAINER_NAME} up and running..."
