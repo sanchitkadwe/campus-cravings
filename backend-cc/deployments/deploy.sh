@@ -27,6 +27,7 @@ docker pull adityaupadhye/${CC_DJANGO_DOCKER_IMAGE}
 echo "docker pulling new image done."
 
 docker stop ${CC_DJANGO_CONTAINER_NAME} || true
+docker rm ${CC_DJANGO_CONTAINER_NAME} || true
 
 
 

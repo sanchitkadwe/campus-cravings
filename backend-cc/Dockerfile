@@ -9,7 +9,8 @@ FROM python:3.13.2-slim
 RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     build-essential \
-    pkg-config
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
 WORKDIR /app
