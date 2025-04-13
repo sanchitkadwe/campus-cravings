@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROD_ENV_FILE_PATH="~/.campus_cravings/env/.env"
+PROD_ENV_FILE_PATH=~/.campus_cravings/env/.env
 
 # Setup the env variables
 set -a
