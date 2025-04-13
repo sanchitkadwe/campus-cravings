@@ -8,7 +8,7 @@ on:
 jobs:
   # CI: Build, Test, and Push Docker Image
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     steps:
       # Step 1: Checkout Code
