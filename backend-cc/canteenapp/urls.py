@@ -18,9 +18,10 @@ from django.contrib import admin
 from django.urls import include, path
 
 from app import urls
+from settings import PROD_ADMIN_URL_PREFIX
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(f'{PROD_ADMIN_URL_PREFIX}admin/', admin.site.urls),
     path('', include(urls))
 ]
