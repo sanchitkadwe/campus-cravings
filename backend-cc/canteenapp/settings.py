@@ -26,7 +26,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # or any other directory yo
 STATIC_URL = '/static/'  # URL for serving static files
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Directory for app-specific static files
 
-PROD_ADMIN_URL_PREFIX=os.getenv('ADMIN_PREFIX', '')
+PROD_ADMIN_URL_PREFIX = os.getenv('ADMIN_PREFIX', '')
+FORCE_SCRIPT_NAME = os.getenv('ADMIN_PREFIX', '')
+
 
 
 
