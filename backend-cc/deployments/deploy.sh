@@ -43,5 +43,8 @@ docker run -d \
 
 echo "Docker container ${CC_DJANGO_CONTAINER_NAME} up and running..."
 
+# collect static files at runtime
+docker exec ${CC_DJANGO_CONTAINER_NAME} sh -c "python3 manage.py collectstatic"
+
 # Setup Django crontabs
 # docker exec mess_app_server sh -c "python3 manage.py crontab add &"
