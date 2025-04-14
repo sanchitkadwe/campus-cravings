@@ -38,6 +38,7 @@ docker run -d \
  --restart unless-stopped \
  --env-file ${PROD_ENV_FILE_PATH} \
  -v ${PROD_ENV_FILE_PATH}:/app/.env \
+ -v /var/www/campus_cravings/staticfiles:/app/staticfiles \
  adityaupadhye/${CC_DJANGO_DOCKER_IMAGE}
 
 echo "Docker container ${CC_DJANGO_CONTAINER_NAME} up and running..."
