@@ -28,6 +28,7 @@ from cashfree_pg.api_client import Cashfree
 from cashfree_pg.models.customer_details import CustomerDetails
 from cashfree_pg.models import CreateOrderRequest, CustomerDetails, OrderMeta
 import urllib3
+from canteenapp import settings
 
 # Disable SSL warnings for sandbox (remove in production)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -418,7 +419,7 @@ class ActiveOrderViewSet(viewsets.ModelViewSet):
     permission_classes = [ IsAuthenticated]
     authentication_classes = [CookieJWTAuthentication]  # Use your custom class
 
-    @action(detail= False,methods=['get'],)
+    # @action(detail= False,methods=['get'],)
     # def filterorders(self,request):
     #     user= request.user
     #     if user.role=='canteen_manager':
@@ -433,30 +434,43 @@ class ActiveOrderViewSet(viewsets.ModelViewSet):
     #     return Response({"error":"Not an authenticated user"},status=status.HTTP_403_FORBIDDEN)
 
         
-    @action(detail= False,methods=['get','put'])
-    def manageorder(self,request):
-        user= request.user
-        orderid = request.data.get('id')
-        clicked_button = request.data.get('button_status')
+    @action(detail=False, methods=['GET','PUT'])
+    def manageorder(self, request):
+        try:
+            user= request.user
+            print(request.data)
+            orderid = request.data.get('id')
+            # type casting id [string] to int
+            orderid = int(orderid)
+            order_status = request.data.get('status')
 
-        if user.role=='canteen_manager':
-            try:
-                order = ActiveOrder.objects.get(id=orderid)
-                if clicked_button =='Accept':
-                    order.status = 'Accepted'
+            if not orderid or not order_status:
+                return Response(
+                    {"error": "Missing fields in request body."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            if user.role=='canteen_manager':
+                try:
+                    order = ActiveOrder.objects.get(id=orderid)
+
+                    order.status = order_status
                     order.save()
+
+                    serializer = self.get_serializer(order)
+                    return Response(serializer.data,status=status.HTTP_200_OK)
+
+                except ActiveOrder.DoesNotExist:
+                    return Response({"error": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
                 
-                elif clicked_button=='Reject':
-                    order.status = 'Rejected'
-                    order.save()
-
-                serializer = self.get_serializer(order,many=True)
-                return Response(serializer.data,status=status.HTTP_200_OK)
-
-            except Exception as e :
-                return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                except Exception as e :
+                    return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            else:
+                return Response({"error":"Not an authenticated user"},status=status.HTTP_403_FORBIDDEN)
             
-        return Response({"error":"Not an authenticated user"},status=status.HTTP_403_FORBIDDEN)
+        except Exception as e: 
+            print('exception:  ', e)
+            return Response({"error": "Something went wrong"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['get'])
     def my_orders(self, request):
@@ -653,7 +667,88 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 
 
-    @action(detail= False, methods=['post'])
-    def cashfree_webhook(self,request):
-        pass 
+    @action(detail=False, methods=['post'])
+    def webhook(self, request):
+        try:
+
+            # Refer docs: https://www.cashfree.com/docs/payments/online/webhooks/overview#webhook-signature-verification
+    
+            # Get the raw body from the request
+            raw_body = request.data
+
+            # Decode the raw body bytes into a string
+            decoded_body = raw_body.decode('utf-8')
+
+            #verify_signature
+            timestamp = request.headers['x-webhook-timestamp']
+            signature = request.headers['x-webhook-signature']
+
+            cashfree = Cashfree()
+            cashfree.XClientId = settings.CF_APP_ID
+            cashfree.XClientSecret = settings.CF_SECRET_KEY
+            try:
+                cashfreeWebhookResponse = cashfree.PGVerifyWebhookSignature(signature, decoded_body, timestamp)
+            except:
+                # If Signature mis-match
+                return Response({"status": "Invalid signature"}, status=400)
+
+
+            # payment = self.get_queryset().get(pk=pk)
+            # x_verify = request.headers.get('X-VERIFY')
+            webhook_req_data = request.data
+            
+            # Verify the checksum
+            # encoded_data = base64.b64encode(json.dumps(webhook_req_data).encode()).decode()
+            # expected_checksum = hashlib.sha256(
+            #     f"{encoded_data}{self.SALT_KEY}".encode()
+            # ).hexdigest() + f"###{self.SALT_INDEX}"
+            
+            # if x_verify != expected_checksum:
+            #     return Response({"status": "invalid signature"}, status=400)
+            
+            # get all payload data
+            payload = webhook_req_data
+            order_id = payload['data']['order']['order_id']
+            payment_status = payload['data']['payment']['payment_status']
+            cf_payment_id = payload['data']['payment']['cf_payment_id']
+            payment_amount = payload['data']['payment']['payment_amount']
+            payment_time = payload['data']['payment']['payment_time']
+
+            # fetch order from order_id
+            # do any processing if required on order_id
+            order = ActiveOrder.objects.get(pk=int(order_id))
+
+            # set internal payment status
+            payment_status_internal = ''
+            if payment_status == 'SUCCESS':
+                payment_status_internal = 'Completed'
+            elif payment_status == 'FAILED' or payment_status == 'USER_DROPPED':
+                payment_status_internal = 'Failed'
+            else:
+                payment_status_internal = 'Pending'
+
+            # Step 3: Find or create payment record for this order
+            with transaction.atomic():
+
+                payment, created = Payment.objects.get_or_create(
+                    order=order,
+                    defaults={
+                        "transaction_id": cf_payment_id,
+                        "status": payment_status_internal,
+                        "payment_time": payment_time
+                    }
+                )
+
+                if not created:
+                    # Update existing payment
+                    payment.transaction_id = cf_payment_id
+                    payment.status = payment_status_internal
+                    # payment.payment_amount = payment_amount
+                    payment.payment_time = payment_time
+                    payment.save()
+
+            return Response({"status": "success"}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"status": f"error: {str(e)}"}, status=500)
     
