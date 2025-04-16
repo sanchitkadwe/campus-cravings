@@ -195,3 +195,8 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = "app.User"
+
+
+# CASHFREE PAYMENT GATEWAY
+CF_APP_ID = os.getenv('CF_APP_ID', '')
+CF_SECRET_KEY = os.getenv('CF_SECRET_KEY', '')
