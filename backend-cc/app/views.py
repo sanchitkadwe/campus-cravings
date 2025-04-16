@@ -574,9 +574,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
     # Sandbox credentials
-    Cashfree.XClientId = "TEST10558532a1ad22e19bbe59ddefeb23585501"
-    Cashfree.XClientSecret = "cfsk_ma_test_d437f685653b9f2a86310072988d0100_7ab437bc"
-    Cashfree.XEnvironment = Cashfree.SANDBOX
     x_api_version = "2023-08-01"
 
     
