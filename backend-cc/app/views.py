@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import json
+import random
 import time
 import requests
 import uuid
@@ -22,7 +23,17 @@ from rest_framework.pagination import PageNumberPagination
 from django.db import transaction
 from django.db.models import Sum
 from .permissions import IsAdmin, IsUser
-from .serializers import PaymentInitiateSerializer
+from cashfree_pg.models.create_order_request import CreateOrderRequest
+from cashfree_pg.api_client import Cashfree
+from cashfree_pg.models.customer_details import CustomerDetails
+from cashfree_pg.models import CreateOrderRequest, CustomerDetails, OrderMeta
+import urllib3
+
+# Disable SSL warnings for sandbox (remove in production)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# Configure Cashfree to skip SSL verification (sandbox only)
+Cashfree.verify_ssl = False
 
 
 class StoreViewSet(viewsets.ModelViewSet):
@@ -540,137 +551,109 @@ class OrderHistoryViewset(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        
 
-
-class PaymentViewSet(viewsets.ModelViewSet):
+class PaymentViewSet(viewsets.ModelViewSet):    
     queryset = Payment.objects.all()
-    serializer_class = PaymentInitiateSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [CookieJWTAuthentication]
+    serializer_class = PaymentSerializer
+    permission_classes = [AllowAny]
 
     # Sandbox credentials
-    MERCHANT_ID = "PGTESTPAYUAT"
-    SALT_KEY = "099eb0cd-02cf-4e2a-8aca-3e6c6aff0399"
-    SALT_INDEX = 1
-    BASE_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox"
-    PHONEPE_BASE_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox"
-    FRONTEND_URL = "http://localhost:4200"
-    BACKEND_URL = "http://localhost:8000"
-    
-    
-    @action(detail=False, methods=['post'])
-    def initiate(self, request):
-        # Initialize serializer with request context
-        serializer = self.get_serializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        
-        # This will now work because create() is implemented in serializer
-        payment = serializer.save(status='Pending')
-        
-        data = {
-            "merchantId": self.MERCHANT_ID,
-            "merchantTransactionId": payment.transaction_id,
-            "merchantUserId": f"USER_{request.user.id}",
-            "amount": int(payment.amount * 100),  # Convert to paise
-            "redirectUrl": f"{self.FRONTEND_URL}/payment-callback",
-            "redirectMode": "POST",
-            "callbackUrl": f"{self.BACKEND_URL}/api/payments/{payment.id}/webhook/",
-            "paymentInstrument": {
-                "type": "PAY_PAGE"
-            }
-        }
-        
-        try:
-            # Generate checksum
-            encoded_data = base64.b64encode(json.dumps(data).encode()).decode()
-            string_to_hash = f"{encoded_data}/pg/v1/pay{self.SALT_KEY}"
-            sha256_hash = hashlib.sha256(string_to_hash.encode()).hexdigest()
-            checksum = f"{sha256_hash}###{self.SALT_INDEX}"
-            
-            headers = {
-                "Content-Type": "application/json",
-                "X-VERIFY": checksum,
-                "accept": "application/json"
-            }
-            
-            response = requests.post(
-                f"{self.BASE_URL}/pg/v1/pay",
-                headers=headers,
-                json={"request": encoded_data},
-                timeout=10
-            )
-            
-            response.raise_for_status()
-            response_data = response.json()
-            
-            if not response_data.get('success', False):
-                payment.status = 'Failed'
-                payment.save()
-                return Response({
-                    'success': False,
-                    'error': response_data.get('message', 'Payment gateway error'),
-                    'code': response_data.get('code', 'UNKNOWN_ERROR')
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Store the gateway response
-            payment.gateway_response = response_data
-            payment.save()
-            
-            return Response({
-                'success': True,
-                'payment_url': response_data['data']['instrumentResponse']['redirectInfo']['url'],
-                'transaction_id': payment.transaction_id
-            })
-            
-        except requests.exceptions.RequestException as e:
-            payment.status = 'Failed'
-            payment.save()
-            return Response({
-                'success': False,
-                'error': f"Payment gateway connection error: {str(e)}"
-            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-            
-        except Exception as e:
-            payment.status = 'Failed'
-            payment.save()
-            return Response({
-                'success': False,
-                'error': f"Unexpected error: {str(e)}"
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    Cashfree.XClientId = "TEST10558532a1ad22e19bbe59ddefeb23585501"
+    Cashfree.XClientSecret = "cfsk_ma_test_d437f685653b9f2a86310072988d0100_7ab437bc"
+    Cashfree.XEnvironment = Cashfree.SANDBOX
+    x_api_version = "2023-08-01"
 
+    
+    @action(detail= False, methods=['post'],permission_classes=[IsAuthenticated],authentication_classes=[CookieJWTAuthentication])
+    def createorder(self,request):
+        user = request.user
 
-    @action(detail=True, methods=['post'])
-    def webhook(self, request, pk=None):
         try:
-            payment = self.get_queryset().get(pk=pk)
-            x_verify = request.headers.get('X-VERIFY')
+            total_price = int(request.data.get('total', 0))
+            if(total_price<=0):
+                raise ValueError("Order price must be positive")
             
-            # Verify the checksum
-            response_data = request.data
-            encoded_data = base64.b64encode(json.dumps(response_data).encode()).decode()
-            expected_checksum = hashlib.sha256(
-                f"{encoded_data}{self.SALT_KEY}"
-            ).hexdigest() + f"###{self.SALT_INDEX}"
+        except (TypeError, ValueError) as e:
+            return Response(
+                {"error": "Invalid total price", "detail": str(e)},status=status.HTTP_400_BAD_REQUEST)
+        
+
+        try: 
+            with transaction.atomic():
+                # creating order 
+                order = ActiveOrder.objects.create(
+                    ordered_by=user,
+                    status='Pending',
+                    total_price=total_price,
+                )
+
+                orderItems = [
+                    OrderItem(
+                        order=order,
+                        menu_item=MenuItem.objects.get(id=item['menu_item']['id']), 
+                        quantity = item['quantity']
+                    )
+                    for item in request.data['items'] 
+                ]
+
+                OrderItem.objects.bulk_create(orderItems)
+
+                customerDetails = CustomerDetails(
+                    customer_id= user.name,
+                    customer_phone= User.objects.get(id=user.id).phone_number
+                )
             
-            if x_verify != expected_checksum:
-                return Response({"status": "invalid signature"}, status=400)
-            
-            # Update payment status based on response
-            code = response_data.get('code')
-            if code == 'PAYMENT_SUCCESS':
-                payment.status = 'Completed'
-            elif code == 'PAYMENT_ERROR':
-                payment.status = 'Failed'
-            else:
-                payment.status = 'Pending'
+                orderMeta = OrderMeta(
+                    return_url=f"http://localhost:4200/payment/"
+                )
                 
-            payment.gateway_response = response_data
-            payment.save()
-            
-            return Response({"status": "processed"})
-            
-        except Payment.DoesNotExist:
-            return Response({"status": "payment not found"}, status=404)
-        except Exception as e:
-            return Response({"status": f"error: {str(e)}"}, status=500)
+                createOrderRequest = CreateOrderRequest(
+                    order_amount=total_price,
+                    order_currency="INR",
+                    customer_details=customerDetails,
+                    order_meta=orderMeta,
+                    order_id=f"ORD{order.id}", 
+                )
 
+                api_response = Cashfree().PGCreateOrder(
+                    self.x_api_version,
+                    createOrderRequest,
+                    None,
+                    None
+                )
+                print(len(api_response.data.payment_session_id))
+                print(api_response.data.payment_session_id)
+                order.cf_session_id = api_response.data.payment_session_id
+                order.save()
+
+                return Response({
+                    'status': 'success',
+                    'data': {
+                        'payment_session_id': api_response.data.payment_session_id,
+                        'order_id': order.id,  
+                    }
+                })
+
+
+        except Exception as e:
+            print(f"Order creation failed for user {user.id}: {str(e)}")   
+            if 'order' in locals():
+                order.status = 'Rejected'
+                order.save()
+            return Response(
+                {
+                    "error": "Payment gateway error",
+                    "detail": str(e),
+                    "order_id": order.id if 'order' in locals() else None
+                },
+                status=status.HTTP_502_BAD_GATEWAY
+            )
+
+
+
+    @action(detail= False, methods=['post'])
+    def cashfree_webhook(self,request):
+        pass 
+    
