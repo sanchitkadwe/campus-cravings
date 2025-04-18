@@ -11,10 +11,10 @@ class Store(models.Model):
 
 class User(AbstractUser):
 
-    # email = None
+    email = None
     first_name = None
     last_name = None 
-    # username = None
+    username = None
 
     ROLE_CHOICES = [
         ('user', 'User'),
@@ -30,7 +30,7 @@ class User(AbstractUser):
     
 
     USERNAME_FIELD = "phone_number"
-    REQUIRED_FIELDS = ["name","role","username"]  
+    REQUIRED_FIELDS = ["name","role"]  
 
 
     def is_admin(self):
@@ -86,6 +86,12 @@ class ActiveOrder(models.Model):
     status = models.CharField(max_length=10,choices=STATUS_CHOICES, default='Pending')
     total_price = models.PositiveIntegerField()
     order_time = models.DateTimeField(auto_now_add=True)
+
+
+    def save(self, *args, **kwargs):
+        # Run model validation before saving
+        self.full_clean()  # <-- This validates all fields, including choices
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Order #{self.id} - {self.ordered_by.name} [{self.status}]"

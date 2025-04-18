@@ -1,11 +1,12 @@
 <div class="container-fluid d-flex vh-100 p-0">
+  <ngx-spinner type="square-jelly-box"></ngx-spinner>
   <div class="d-flex w-100">
     <!-- Content -->
     <div class="flex-grow-1 p-4">
-      <app-orderview></app-orderview>
+      <app-orderview (onOrderDataChange)="onOrderDataChangesParent($event)"></app-orderview>
 
       <!-- Combined Order Actions -->
-      <div class="container py-1 mb-2" style="max-width: 1152px;">
+      <div class="container pb-5 mb-2" style="max-width: 1152px;">
         <div class="card">
           <div class="card-header py-1 border-bottom">
             <h2 class="h6 fw-semibold mb-0">Order Actions</h2>
@@ -14,8 +15,9 @@
             <div class="d-flex flex-nowrap align-items-center justify-content-between gap-2">
               <!-- Action Buttons Container -->
               <div class="d-flex flex-nowrap gap-2 flex-grow-1 pe-2" style="min-width: 0;">
+
                 <!-- Initial State (Accept/Reject) -->
-                <ng-container *ngIf="!orderStatusChanged">
+                <ng-container *ngIf="order?.order.status === 'Pending'">
                   <button class="btn btn-success rounded-pill px-3 px-sm-4 flex-grow-1 flex-sm-grow-0"
                     (click)="onAccept()">
                     <i class="fas fa-check-circle me-1 me-sm-2"></i>
@@ -29,7 +31,7 @@
                 </ng-container>
 
                 <!-- After Accept (Show Delivered) -->
-                <ng-container *ngIf="orderStatus === 'accepted'">
+                <ng-container *ngIf="order?.order.status === 'Accepted'">
                   <button class="btn btn-primary rounded-pill px-3 px-sm-4 flex-grow-1 flex-sm-grow-0"
                     (click)="onDelivered()">
                     <i class="fas fa-truck me-1 me-sm-2"></i>
@@ -38,13 +40,13 @@
                 </ng-container>
 
                 <!-- After Reject (Show Message) -->
-                <div *ngIf="orderStatus === 'rejected'" class="alert alert-danger py-1 mb-0 w-100 text-center">
+                <div *ngIf="order?.order.status === 'Rejected'" class="alert alert-danger py-1 mb-0 w-100 text-center">
                   <i class="fas fa-ban me-2"></i>
                   Order has been rejected
                 </div>
 
                 <!-- After Delivered (Show Message) -->
-                <div *ngIf="orderStatus === 'delivered'" class="alert alert-success py-1 mb-0 w-100 text-center">
+                <div *ngIf="order?.order.status === 'Delivered'" class="alert alert-success py-1 mb-0 w-100 text-center">
                   <i class="fas fa-check-circle me-2"></i>
                   Order has been delivered
                 </div>

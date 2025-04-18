@@ -10,7 +10,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-allorder',
-  imports: [CommonModule, NgxSpinnerModule,RouterModule,LoginComponent,FormsModule,SkeletonModule],
+  imports: [CommonModule, NgxSpinnerModule,RouterModule,FormsModule,SkeletonModule],
   templateUrl: './allorder.component.html',
   styleUrl: './allorder.component.css'
 })

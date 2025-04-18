@@ -29,10 +29,10 @@
     <div *ngIf="allorders.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div *ngFor="let order of allorders"
         class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100 relative">
-        <button
+        <button [routerLink]="'./orderdetails'" [queryParams]="{ id: order.id }"
           class="absolute top-4 right-4 p-2 border border-gray-300 rounded-md transition-all duration-200 bg-white hover:bg-indigo-50 text-gray-500 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-100 flex items-center justify-center gap-1 w-24">
           <i class="fas fa-save text-sm"></i>
-          <a [routerLink]="'./orderdetails'" [queryParams]="{ id: order.id }" class="text-xs font-medium">
+          <a  class="text-xs font-medium">
             View
           </a>
         </button>
@@ -128,15 +128,4 @@
     </div>
   </div>
 </main>
-
-
-
-
-
-
-
-
-
-
-
 

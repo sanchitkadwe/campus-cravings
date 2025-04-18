@@ -1,28 +1,18 @@
-import base64
-import hashlib
-import json
-import random
-import time
-import requests
-import uuid
 from rest_framework import viewsets
 from .models import User, Category, MenuItem, CartItem, ActiveOrder, Payment, Store,OrderItem,OrderItemHistory,OrderHistory
-from .serializers import UserSerializer, CategorySerializer, MenuItemSerializer, CartItemSerializer, ActiveOrderSerializer, PaymentSerializer,StoreSerializer,LoginSerializer,OrderHistorySerializer,OrderItemSerializer
+from .serializers import UserSerializer, CategorySerializer, MenuItemSerializer, CartItemSerializer, ActiveOrderSerializer, PaymentSerializer,StoreSerializer,OrderHistorySerializer,OrderItemSerializer
 from rest_framework.decorators import action
 from rest_framework import status 
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.hashers import check_password
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.sessions.models import Session
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
 from .authentication import CookieJWTAuthentication  
-from rest_framework.pagination import PageNumberPagination
 from django.db import transaction
 from django.db.models import Sum
-from .permissions import IsAdmin, IsUser
+from .permissions import IsAdmin
 from cashfree_pg.models.create_order_request import CreateOrderRequest
 from cashfree_pg.api_client import Cashfree
 from cashfree_pg.models.customer_details import CustomerDetails
@@ -35,6 +25,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Configure Cashfree to skip SSL verification (sandbox only)
 Cashfree.verify_ssl = False
+Cashfree.XClientId = settings.CF_APP_ID
+Cashfree.XClientSecret = settings.CF_SECRET_KEY
+Cashfree.XEnvironment = Cashfree.SANDBOX
+x_api_version = "2023-08-01"
 
 
 class StoreViewSet(viewsets.ModelViewSet):
@@ -671,7 +665,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
             # Refer docs: https://www.cashfree.com/docs/payments/online/webhooks/overview#webhook-signature-verification
     
             # Get the raw body from the request
-            raw_body = request.data
+            raw_body = request.body
 
             # Decode the raw body bytes into a string
             decoded_body = raw_body.decode('utf-8')
@@ -680,13 +674,19 @@ class PaymentViewSet(viewsets.ModelViewSet):
             timestamp = request.headers['x-webhook-timestamp']
             signature = request.headers['x-webhook-signature']
 
+            if not timestamp or not signature:
+                print('Missing timestamp or signature in headers')
+                return Response({"status": "Timestamp or Signature not present"}, status=status.HTTP_400_BAD_REQUEST)
+
             cashfree = Cashfree()
             cashfree.XClientId = settings.CF_APP_ID
             cashfree.XClientSecret = settings.CF_SECRET_KEY
+            
             try:
                 cashfreeWebhookResponse = cashfree.PGVerifyWebhookSignature(signature, decoded_body, timestamp)
-            except:
+            except Exception as e:
                 # If Signature mis-match
+                print('signature verification: ', e)
                 return Response({"status": "Invalid signature"}, status=400)
 
 
@@ -747,5 +747,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
             return Response({"status": "success"}, status=status.HTTP_200_OK)
 
         except Exception as e:
+            print('Other exp: ', e)
             return Response({"status": f"error: {str(e)}"}, status=500)
     
